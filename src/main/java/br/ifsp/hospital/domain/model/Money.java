@@ -29,7 +29,7 @@ public final class Money {
     }
 
     public Money applyDiscount(BigDecimal factor) {
-        return null;
+        return new Money(this.amount.multiply(factor));
     }
 
     public Money subtract(Money other) {
