@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class InsuranceCoverageService {
 
     public Money applyCoverage(Money total, InsuranceType insuranceType) {
-        return null;
+        return total;
     }
 
     public Money getCoveredAmount(Money total, InsuranceType insuranceType) {
