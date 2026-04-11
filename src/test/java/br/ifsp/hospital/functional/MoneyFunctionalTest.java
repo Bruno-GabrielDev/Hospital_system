@@ -60,6 +60,14 @@ class MoneyFunctionalTest {
         assertThat(a.add(b).getAmount()).isEqualByComparingTo("150.00");
     }
 
+    @Test
+    @DisplayName("subtract – resultado correto")
+    void subtract_deveSubtrair() {
+        Money a = new Money(new BigDecimal("200.00"));
+        Money b = new Money(new BigDecimal("60.00"));
+        assertThat(a.subtract(b).getAmount()).isEqualByComparingTo("140.00");
+    }
+
 
 
 }
