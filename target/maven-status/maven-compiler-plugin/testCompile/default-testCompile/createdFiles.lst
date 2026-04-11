@@ -1,0 +1,4 @@
+br/ifsp/hospital/annotation/Functional.class
+br/ifsp/hospital/annotation/TDD.class
+br/ifsp/hospital/functional/MoneyFunctionalTest.class
+br/ifsp/hospital/annotation/UnitTest.class
