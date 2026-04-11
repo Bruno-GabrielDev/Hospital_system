@@ -52,6 +52,14 @@ class MoneyFunctionalTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("add – soma dois valores corretamente")
+    void add_deveSomar() {
+        Money a = new Money(new BigDecimal("100.00"));
+        Money b = new Money(new BigDecimal("50.00"));
+        assertThat(a.add(b).getAmount()).isEqualByComparingTo("150.00");
+    }
+
 
 
 }
