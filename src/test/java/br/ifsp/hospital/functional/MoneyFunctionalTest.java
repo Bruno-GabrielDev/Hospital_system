@@ -44,6 +44,14 @@ class MoneyFunctionalTest {
         assertThat(m.multiply(4).getAmount()).isEqualByComparingTo("100.00");
     }
 
+    @Test
+    @DisplayName("PE – multiply por 0 → IllegalArgumentException")
+    void pe_multiply_por0() {
+        Money m = new Money(new BigDecimal("10.00"));
+        assertThatThrownBy(() -> m.multiply(0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 
 
 }
