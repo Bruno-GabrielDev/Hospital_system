@@ -1,5 +1,6 @@
 package br.ifsp.hospital.domain.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Patient {
@@ -17,7 +18,8 @@ public class Patient {
     }
 
     public static Patient of(String name, String document, InsuranceType insuranceType) {
-        return null;
+        Objects.requireNonNull(insuranceType, "Tipo de seguro é obrigatório.");
+        return new Patient(UUID.randomUUID(), name, document, insuranceType);
     }
 
     public static Patient restore(UUID id, String name, String document, InsuranceType insuranceType) {
