@@ -30,6 +30,13 @@ class MoneyFunctionalTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("AVL – valor = 0.00 → válido (limite inferior)")
+    void avl_construcao_zero() {
+        Money m = new Money(BigDecimal.ZERO);
+        assertThat(m.getAmount()).isEqualByComparingTo("0.00");
+    }
+
 
 
 }
