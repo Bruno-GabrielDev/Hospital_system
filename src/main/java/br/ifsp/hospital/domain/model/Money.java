@@ -9,6 +9,8 @@ public final class Money {
     public Money(BigDecimal amount) {
         if(amount == null)
             throw new IllegalArgumentException("Amount cannot be null");
+        if (amount.compareTo(BigDecimal.ZERO) < 0)
+            throw new IllegalArgumentException("Valor monetário não pode ser negativo.");
         this.amount = amount;
     }
 
