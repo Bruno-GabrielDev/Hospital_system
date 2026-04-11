@@ -23,6 +23,8 @@ public final class Money {
     }
 
     public Money multiply(int quantity) {
+        if (quantity <= 0 )
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero.");
         return new Money(amount.multiply(BigDecimal.valueOf(quantity)));
     }
 
