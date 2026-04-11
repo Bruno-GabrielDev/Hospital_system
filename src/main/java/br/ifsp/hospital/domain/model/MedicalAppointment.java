@@ -19,10 +19,12 @@ public class MedicalAppointment {
     private int rescheduleCount;
     private List<AppointmentProcedure> procedures;
 
-    private MedicalAppointment() {}
+    private MedicalAppointment() {
+        this.status = AppointmentStatus.OPEN;
+    }
 
     public static MedicalAppointment of(Patient patient, Doctor doctor, LocalDateTime scheduledAt) {
-        return null;
+        return new MedicalAppointment();
     }
 
     public static MedicalAppointment restore(UUID id, Patient patient, Doctor doctor,
@@ -40,6 +42,10 @@ public class MedicalAppointment {
 
     public void markAsBilled() {}
 
+    public void cancel() {
+        this.status = AppointmentStatus.CANCELED;
+    }
+
     public Money calculateGrossTotal() {
         return null;
     }
@@ -47,7 +53,9 @@ public class MedicalAppointment {
     public UUID getId()                           { return null; }
     public Patient getPatient()                   { return null; }
     public Doctor getDoctor()                     { return null; }
-    public AppointmentStatus getStatus()          { return null; }
+    public AppointmentStatus getStatus(){
+        return this.status;
+    }
     public LocalDateTime getCreatedAt()           { return null; }
     public LocalDateTime getScheduledAt()         { return null; }
     public int getRescheduleCount()               { return 0; }
