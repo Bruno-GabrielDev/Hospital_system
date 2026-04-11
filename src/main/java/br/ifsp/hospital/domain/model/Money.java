@@ -33,7 +33,7 @@ public final class Money {
     }
 
     public Money subtract(Money other) {
-        return null;
+        return new Money(this.amount.subtract(other.getAmount()));
     }
 
     @Override
