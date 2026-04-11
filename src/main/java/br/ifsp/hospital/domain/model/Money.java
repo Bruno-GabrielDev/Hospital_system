@@ -23,7 +23,7 @@ public final class Money {
     }
 
     public Money multiply(int quantity) {
-        return null;
+        return new Money(amount.multiply(BigDecimal.valueOf(quantity)));
     }
 
     public Money applyDiscount(BigDecimal factor) {
