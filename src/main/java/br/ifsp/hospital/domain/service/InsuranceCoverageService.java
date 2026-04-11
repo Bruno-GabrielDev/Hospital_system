@@ -12,6 +12,8 @@ public class InsuranceCoverageService {
     public Money applyCoverage(Money total, InsuranceType insuranceType) {
         if (insuranceType == InsuranceType.BASIC)
             return total.applyDiscount(new BigDecimal("0.70"));
+        if (insuranceType == InsuranceType.PREMIUM)
+            return total.applyDiscount(new BigDecimal("0.30"));
         return total;
     }
 
