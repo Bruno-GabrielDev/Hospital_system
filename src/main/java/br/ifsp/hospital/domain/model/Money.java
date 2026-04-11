@@ -7,6 +7,8 @@ public final class Money {
     private final BigDecimal amount;
 
     public Money(BigDecimal amount) {
+        if(amount == null)
+            throw new IllegalArgumentException("Amount cannot be null");
         this.amount = amount;
     }
 
