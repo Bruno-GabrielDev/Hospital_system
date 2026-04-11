@@ -40,4 +40,14 @@ class InsuranceCoverageServiceTDDTest {
 
         assertThat(result.getAmount()).isEqualByComparingTo("140.00");
     }
+
+    @Test
+    @DisplayName("#17 – PREMIUM → 70% de desconto (paciente paga 30% = 60.00)")
+    void t17_deveAplicar70PorCentoParaPremium() {
+
+        Money result = service.applyCoverage(total200, InsuranceType.PREMIUM);
+
+        assertThat(result.getAmount()).isEqualByComparingTo("60.00");
+    }
+
 }
