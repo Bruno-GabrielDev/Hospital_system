@@ -23,6 +23,15 @@ import static org.assertj.core.api.Assertions.*;
     @DisplayName("Patient – campos inválidos")
     class PatientInvalidity {
 
+        @ParameterizedTest
+        @NullAndEmptySource
+        @ValueSource(strings = {"   ", "\t"})
+        @DisplayName("PE – name nulo, vazio ou só espaços → exceção")
+        void pe_nameInvalido(String name) {
+            assertThatThrownBy(() -> Patient.of(name, "111", InsuranceType.BASIC))
+                    .isInstanceOf(Exception.class);
+        }
+
         @Test
         @DisplayName("PE – insuranceType nulo → NullPointerException")
         void pe_insuranceTypeNulo() {
