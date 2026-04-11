@@ -22,6 +22,13 @@ class MoneyFunctionalTest {
         assertThatThrownBy(() -> new Money(null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+    @ParameterizedTest
+    @ValueSource(strings = {"-0.01", "-1.00", "-999.99"})
+    @DisplayName("PE – valor negativo → IllegalArgumentException")
+    void pe_valorNegativo(String valor) {
+        assertThatThrownBy(() -> new Money(new BigDecimal(valor)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 
 
 
