@@ -1,0 +1,19 @@
+<changelist name="Uncommitted_changes_before_Update_at_11_04_2026_19_36_[Changes]" date="1775947006088" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_04_2026_19_36_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 11/04/2026 19:36 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/test-classes/br/ifsp/hospital/functional/MoneyFunctionalTest.class" />
+    <option name="AFTER_PATH" value="target/test-classes/br/ifsp/hospital/functional/MoneyFunctionalTest.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_04_2026_19_36_[Changes]/MoneyFunctionalTest.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/br/ifsp/hospital/domain/model/Money.class" />
+    <option name="AFTER_PATH" value="target/classes/br/ifsp/hospital/domain/model/Money.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_04_2026_19_36_[Changes]/Money.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/br/ifsp/hospital/domain/model/Patient.class" />
+    <option name="AFTER_PATH" value="target/classes/br/ifsp/hospital/domain/model/Patient.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_04_2026_19_36_[Changes]/Patient.class" />
+  </binary>
+</changelist>

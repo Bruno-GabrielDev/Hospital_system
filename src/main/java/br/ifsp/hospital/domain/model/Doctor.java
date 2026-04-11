@@ -17,7 +17,7 @@ public class Doctor {
     }
 
     public static Doctor of(String name, String specialty, String license) {
-        return null;
+        return new Doctor(UUID.randomUUID(), name, specialty, license);
     }
 
     public static Doctor restore(UUID id, String name, String specialty, String license) {
