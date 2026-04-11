@@ -19,7 +19,7 @@ public final class Money {
     }
 
     public Money add(Money other) {
-        return null;
+        return new Money(this.amount.add(other.getAmount()));
     }
 
     public Money multiply(int quantity) {
