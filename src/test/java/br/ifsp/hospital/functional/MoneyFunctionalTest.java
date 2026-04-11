@@ -37,6 +37,13 @@ class MoneyFunctionalTest {
         assertThat(m.getAmount()).isEqualByComparingTo("0.00");
     }
 
+    @Test
+    @DisplayName("multiply – multiplica por quantidade positiva")
+    void multiply_deveMultiplicar() {
+        Money m = new Money(new BigDecimal("25.00"));
+        assertThat(m.multiply(4).getAmount()).isEqualByComparingTo("100.00");
+    }
+
 
 
 }
