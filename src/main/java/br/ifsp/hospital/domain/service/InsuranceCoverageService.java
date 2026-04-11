@@ -4,10 +4,14 @@ import br.ifsp.hospital.domain.model.InsuranceType;
 import br.ifsp.hospital.domain.model.Money;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class InsuranceCoverageService {
 
     public Money applyCoverage(Money total, InsuranceType insuranceType) {
+        if (insuranceType == InsuranceType.BASIC)
+            return total.applyDiscount(new BigDecimal("0.70"));
         return total;
     }
 
