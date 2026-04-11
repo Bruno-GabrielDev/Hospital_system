@@ -15,7 +15,7 @@ public final class Money {
     }
 
     public BigDecimal getAmount() {
-        return null;
+        return amount;
     }
 
     public Money add(Money other) {
