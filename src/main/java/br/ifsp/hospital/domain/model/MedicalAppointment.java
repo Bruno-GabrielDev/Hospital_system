@@ -51,6 +51,9 @@ public class MedicalAppointment {
     }
 
     public void reschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator){
+        if(!validator.isWithinWorkingHours(this.doctor, newScheduledAt)){
+            throw new IllegalStateException("Cannot reschedule to outside of doctor's working hours.");
+        }
         if(!validator.isAvailable(this.doctor, newScheduledAt)){
             throw new IllegalStateException("Doctor is not available at this time.");
         }
