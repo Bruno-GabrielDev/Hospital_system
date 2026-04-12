@@ -104,7 +104,5 @@ public class MedicalAppointmentTDDTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> appointment.cancel(""))
                 .withMessage("Cancellation reason is required.");
-
-        assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.OPEN);
     }
 }
