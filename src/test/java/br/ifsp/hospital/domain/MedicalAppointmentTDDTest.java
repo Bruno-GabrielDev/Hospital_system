@@ -120,4 +120,15 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> urgentAppointment.cancel("PATIENT_REQUEST"))
                 .withMessage("Cannot cancel an appointment with less than 3 hours in advance.");
     }
+
+    @Test
+    @UnitTest
+    @TDD
+    void shouldNotCancelAlreadyCanceledAppointment() {
+        appointment.cancel("PATIENT_REQUEST");
+
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> appointment.cancel("PATIENT_REQUEST"))
+                .withMessage("Cannot cancel an already canceled appointment.");
+    }
 }
