@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -80,5 +81,22 @@ class AppointmentServiceTDDTest {
 
         assertThatThrownBy(() -> sut.close(appointmentId))
                 .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("#26/#31 – calculateBill deve aplicar cobertura do convênio ao total bruto")
+    void calculateBillShouldApplyInsuranceType() {
+        Patient patientBasic = Patient.of("Carlos", "222", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Ana", "Ortopedia", "CRM-22");
+        MedicalAppointment appointment = MedicalAppointment.of(patientBasic, doctor,
+                LocalDateTime.of(2026, 5, 1, 10, 0));
+
+        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        appointment.addProcedure(AppointmentProcedure.of(proc, 1));
+        appointment.close();
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
+        Money bill = sut.calculateBill(appointmentId);
+        assertThat(bill.getAmount()).isEqualByComparingTo("140.00");
     }
 }
