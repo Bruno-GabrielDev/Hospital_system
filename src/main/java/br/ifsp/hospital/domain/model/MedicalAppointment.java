@@ -51,6 +51,10 @@ public class MedicalAppointment {
     }
 
     public void reschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator){
+        if (newScheduledAt.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Appointment cannot be rescheduled to a past date.");
+        }
+
         if(!validator.isWithinWorkingHours(this.doctor, newScheduledAt)){
             throw new IllegalStateException("Cannot reschedule to outside of doctor's working hours.");
         }
