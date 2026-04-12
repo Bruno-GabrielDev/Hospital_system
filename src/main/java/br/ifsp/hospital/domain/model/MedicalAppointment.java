@@ -38,11 +38,17 @@ public class MedicalAppointment {
 
     public void addProcedure(AppointmentProcedure procedure) {}
 
-    public void close() {}
+    public void close() {
+        this.status = AppointmentStatus.CLOSED;
+    }
 
     public void markAsBilled() {}
 
     public void cancel() {
+        if (this.status == AppointmentStatus.CLOSED) {
+            throw new IllegalStateException("Closed appointment cannot be canceled.");
+        }
+
         this.status = AppointmentStatus.CANCELED;
     }
 
