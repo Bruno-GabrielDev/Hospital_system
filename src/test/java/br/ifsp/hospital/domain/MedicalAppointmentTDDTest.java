@@ -96,4 +96,15 @@ public class MedicalAppointmentTDDTest {
                     assertThat(proc.isRefunded()).isTrue();
                 });
     }
+
+    @Test
+    @UnitTest
+    @TDD
+    void shouldNotCancelAppointmentWithoutReason() {
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> appointment.cancel(""))
+                .withMessage("Cancellation reason is required.");
+
+        assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.OPEN);
+    }
 }
