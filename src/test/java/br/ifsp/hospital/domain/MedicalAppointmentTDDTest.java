@@ -15,11 +15,13 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public class MedicalAppointmentTDDTest {
 
     private MedicalAppointment appointment;
+    private Patient dummyPatient;
+    private Doctor dummyDoctor;
 
     @BeforeEach
     void setUp() {
-        Patient dummyPatient = Patient.of("John Doe", "123456789", InsuranceType.BASIC);
-        Doctor dummyDoctor = Doctor.of("Dr. House", "Cardiology", "54321");
+        dummyPatient = Patient.of("John Doe", "123456789", InsuranceType.BASIC);
+        dummyDoctor = Doctor.of("Dr. House", "Cardiology", "54321");
         LocalDateTime dummyScheduledAt = LocalDateTime.now().plusDays(1);
 
         appointment = MedicalAppointment.of(dummyPatient, dummyDoctor, dummyScheduledAt);
@@ -110,9 +112,6 @@ public class MedicalAppointmentTDDTest {
     @UnitTest
     @TDD
     void shouldNotCancelAppointmentWithLessThanThreeHoursNotice() {
-        Patient dummyPatient = Patient.of("John Doe", "123456789", InsuranceType.BASIC);
-        Doctor dummyDoctor = Doctor.of("Dr. House", "Cardiology", "54321");
-
         LocalDateTime urgentScheduledAt = LocalDateTime.now().plusHours(2);
         MedicalAppointment urgentAppointment = MedicalAppointment.of(dummyPatient, dummyDoctor, urgentScheduledAt);
 

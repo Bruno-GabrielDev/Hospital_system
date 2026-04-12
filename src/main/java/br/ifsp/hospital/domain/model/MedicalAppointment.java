@@ -10,6 +10,7 @@ public class MedicalAppointment {
     public static final int MAX_PROCEDURES       = 50;
     public static final int MAX_RESCHEDULES      = 3;
     public static final int MIN_RESCHEDULE_HOURS = 6;
+    public static final int MIN_CANCEL_HOURS     = 3;
 
     private UUID id;
     private Patient patient;
@@ -57,6 +58,21 @@ public class MedicalAppointment {
     }
 
     public void cancel(String reason) {
+        validateCancellation(reason);
+
+        if (this.status == AppointmentStatus.BILLED) {
+            processRefunds();
+        }
+
+        this.procedures.forEach(AppointmentProcedure::cancel);
+        this.status = AppointmentStatus.CANCELED;
+    }
+
+    public Money calculateGrossTotal() {
+        return null;
+    }
+
+    private void validateCancellation(String reason) {
         if (reason == null || reason.isBlank()) {
             throw new IllegalArgumentException("Cancellation reason is required.");
         }
@@ -66,21 +82,14 @@ public class MedicalAppointment {
         if (this.status == AppointmentStatus.CLOSED) {
             throw new IllegalStateException("Closed appointment cannot be canceled.");
         }
-        if (LocalDateTime.now().plusHours(3).isAfter(this.scheduledAt)) {
-            throw new IllegalStateException("Cannot cancel an appointment with less than 3 hours in advance.");
+        if (LocalDateTime.now().plusHours(MIN_CANCEL_HOURS).isAfter(this.scheduledAt)) {
+            throw new IllegalStateException("Cannot cancel an appointment with less than " + MIN_CANCEL_HOURS + " hours in advance.");
         }
-
-        if (this.status == AppointmentStatus.BILLED) {
-            this.refund();
-            this.procedures.forEach(AppointmentProcedure::refund);
-        }
-
-        this.procedures.forEach(AppointmentProcedure::cancel);
-        this.status = AppointmentStatus.CANCELED;
     }
 
-    public Money calculateGrossTotal() {
-        return null;
+    private void processRefunds() {
+        this.refund();
+        this.procedures.forEach(AppointmentProcedure::refund);
     }
 
     private void refund() {
