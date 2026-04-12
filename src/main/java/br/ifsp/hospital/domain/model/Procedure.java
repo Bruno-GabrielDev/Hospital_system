@@ -1,5 +1,6 @@
 package br.ifsp.hospital.domain.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Procedure {
@@ -35,8 +36,15 @@ public class Procedure {
         return  status;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Procedure procedure = (Procedure) o;
+        return Objects.equals(id, procedure.id);
+    }
 
-
-    @Override public boolean equals(Object o) { return false; }
-    @Override public int hashCode()            { return 0; }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

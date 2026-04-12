@@ -18,7 +18,7 @@ class AppointmentProcedureTDDTest {
     @Test
     @DisplayName("#6 – restore deve retornar instância com valores corretos")
     void shouldReturnAppointmentProcedureInstanceWithAllValuesCorrect() {
-        UUID id = UUID.randomUUID();
+        UUID id = UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11");
         Procedure procedure = Procedure.of("RX", new Money(new BigDecimal("100.00")));
         AppointmentProcedure restored = AppointmentProcedure.restore(id, procedure, 3);
 
