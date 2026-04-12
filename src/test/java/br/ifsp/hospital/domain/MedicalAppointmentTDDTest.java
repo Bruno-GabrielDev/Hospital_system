@@ -73,4 +73,27 @@ public class MedicalAppointmentTDDTest {
                 .isNotEmpty()
                 .allSatisfy(proc -> assertThat(proc.getStatus()).isEqualTo(ProcedureStatus.CANCELED));
     }
+
+    @Test
+    @UnitTest
+    @TDD
+    void shouldRefundProceduresWhenCancelingBilledAppointment() {
+        Procedure dummyProcedure = Procedure.of("Dummy Procedure", new Money(BigDecimal.valueOf(100)));
+        AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
+
+        appointment.addProcedure(dummyAppointmentProcedure);
+        appointment.markAsBilled();
+
+        appointment.cancel();
+
+        assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
+        assertThat(appointment.isRefunded()).isTrue();
+
+        assertThat(appointment.getProcedures())
+                .isNotEmpty()
+                .allSatisfy(proc -> {
+                    assertThat(proc.getStatus()).isEqualTo(ProcedureStatus.CANCELED);
+                    assertThat(proc.isRefunded()).isTrue();
+                });
+    }
 }
