@@ -20,7 +20,7 @@ public class AppointmentProcedure {
     }
 
     public static AppointmentProcedure restore(UUID id, Procedure procedure, int quantity) {
-        return null;
+        return new AppointmentProcedure(id, procedure, quantity);
     }
 
     public void cancel() {
@@ -31,11 +31,11 @@ public class AppointmentProcedure {
         this.refunded = true;
     }
 
-    public UUID getId()            { return null; }
+    public UUID getId() { return id; }
     public Procedure getProcedure(){
         return this.procedure;
     }
-    public int getQuantity()       { return 0; }
+    public int getQuantity()       { return quantity; }
     public Money getTotalCost()    { return null; }
 
     public ProcedureStatus getStatus(){
