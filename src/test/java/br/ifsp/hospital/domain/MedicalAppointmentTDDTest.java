@@ -199,5 +199,18 @@ public class MedicalAppointmentTDDTest {
         assertThat(appointment.getPatient()).isEqualTo(initialPatient);
         assertThat(appointment.getDoctor()).isEqualTo(initialDoctor);
     }
+
+    @Test
+    @DisplayName("Deve bloquear reagendamento se o médico já possuir outra consulta (#53)")
+    void shouldBlockRescheduleIfDoctorHasAnotherAppointment() {
+        LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(2);
+        DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
+
+        when(validator.isAvailable(dummyDoctor, newScheduledAt)).thenReturn(false);
+
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> appointment.reschedule(newScheduledAt, validator))
+                .withMessage("Doctor is not available at this time.");
+    }
 }
 
