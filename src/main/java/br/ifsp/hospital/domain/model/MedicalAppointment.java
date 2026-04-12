@@ -22,6 +22,10 @@ public class MedicalAppointment {
     private boolean refunded;
 
     private MedicalAppointment(Patient patient, Doctor doctor, LocalDateTime scheduledAt) {
+        this.patient = patient;
+        this.doctor = doctor;
+        this.scheduledAt = scheduledAt;
+
         this.status = AppointmentStatus.OPEN;
         this.procedures = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
