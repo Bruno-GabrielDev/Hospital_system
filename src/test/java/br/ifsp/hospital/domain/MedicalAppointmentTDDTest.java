@@ -6,6 +6,7 @@ import br.ifsp.hospital.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,5 +55,22 @@ public class MedicalAppointmentTDDTest {
 
         assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
         assertThat(appointment.isRefunded()).isTrue();
+    }
+
+    @Test
+    @UnitTest
+    @TDD
+    void shouldCancelProceduresWhenCancelingAppointment() {
+        Procedure dummyProcedure = Procedure.of("Dummy Procedure", new Money(BigDecimal.valueOf(100)));
+        AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
+
+        appointment.addProcedure(dummyAppointmentProcedure);
+        appointment.cancel();
+
+        assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
+
+        assertThat(appointment.getProcedures())
+                .isNotEmpty()
+                .allSatisfy(proc -> assertThat(proc.getStatus()).isEqualTo(ProcedureStatus.CANCELED));
     }
 }
