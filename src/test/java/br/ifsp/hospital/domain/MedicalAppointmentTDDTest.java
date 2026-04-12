@@ -226,5 +226,16 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> appointment.reschedule(newScheduledAt, validator))
                 .withMessage("Cannot reschedule to outside of doctor's working hours.");
     }
+
+    @Test
+    @DisplayName("Deve bloquear reagendamento para uma data no passado (#56)")
+    void shouldBlockRescheduleToPastDate() {
+        LocalDateTime pastScheduledAt = LocalDateTime.now().minusDays(1);
+        DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> appointment.reschedule(pastScheduledAt, validator))
+                .withMessage("Appointment cannot be rescheduled to a past date.");
+    }
 }
 
