@@ -35,8 +35,8 @@ public class AppointmentProcedure {
     public Procedure getProcedure(){
         return this.procedure;
     }
-    public int getQuantity()       { return quantity; }
-    public Money getTotalCost()    { return null; }
+    public int getQuantity() { return quantity; }
+    public Money getTotalCost() { return procedure.getCost().multiply(quantity); }
 
     public ProcedureStatus getStatus(){
         return this.getProcedure().getStatus();
