@@ -145,5 +145,23 @@ public class MedicalAppointmentTDDTest {
         assertThat(appointment.getRescheduleCount()).isEqualTo(0);
         assertThat(appointment.getProcedures()).isEmpty();
     }
+
+    @Test
+    @DisplayName("#26 – calculateGrossTotal deve somar o custo de todos os procedimentos")
+    void calculateGrossTotalMaySumCostsOfAllProcedures() {
+        Patient patient = Patient.of("João", "111", InsuranceType.BASIC);
+        Doctor doctor  = Doctor.of("Dr. Ana", "Ortopedia", "CRM-11");
+        MedicalAppointment appointment = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+
+        Procedure p1 = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        Procedure p2 = Procedure.of("RX",       new Money(new BigDecimal("100.00")));
+        appointment.addProcedure(AppointmentProcedure.of(p1, 1));
+        appointment.addProcedure(AppointmentProcedure.of(p2, 2));
+
+        Money total = appointment.calculateGrossTotal();
+
+        assertThat(total.getAmount()).isEqualByComparingTo("400.00");
+    }
 }
 
