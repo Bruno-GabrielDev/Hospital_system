@@ -21,16 +21,16 @@ public class Procedure {
     }
 
     public static Procedure restore(UUID id, String name, Money cost) {
-        return null;
+        return new Procedure(id, name, cost);
     }
 
     public void cancel() {
         this.status = ProcedureStatus.CANCELED;
     }
 
-    public UUID getId()    { return null; }
-    public String getName(){ return null; }
-    public Money getCost() { return null; }
+    public UUID getId()    { return id; }
+    public String getName(){ return name; }
+    public Money getCost() { return cost; }
     public ProcedureStatus getStatus() {
         return  status;
     }
