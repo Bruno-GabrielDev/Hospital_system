@@ -40,7 +40,13 @@ public class MedicalAppointment {
                                              LocalDateTime scheduledAt, LocalDateTime createdAt,
                                              AppointmentStatus status, int rescheduleCount,
                                              List<AppointmentProcedure> procedures) {
-        return null;
+        MedicalAppointment appointment = new MedicalAppointment(patient, doctor, scheduledAt);
+        appointment.id              = id;
+        appointment.createdAt       = createdAt;
+        appointment.status          = status;
+        appointment.rescheduleCount = rescheduleCount;
+        appointment.procedures      = new ArrayList<>(procedures);
+        return appointment;
     }
 
     public void reschedule(LocalDateTime newScheduledAt) {}
@@ -96,15 +102,15 @@ public class MedicalAppointment {
         this.refunded = true;
     }
 
-    public UUID getId()                           { return null; }
-    public Patient getPatient()                   { return null; }
-    public Doctor getDoctor()                     { return null; }
+    public UUID getId() { return id; }
+    public Patient getPatient() { return patient; }
+    public Doctor getDoctor() { return doctor; }
     public AppointmentStatus getStatus(){
         return this.status;
     }
-    public LocalDateTime getCreatedAt()           { return null; }
-    public LocalDateTime getScheduledAt()         { return null; }
-    public int getRescheduleCount()               { return 0; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getScheduledAt() { return scheduledAt; }
+    public int getRescheduleCount() { return rescheduleCount; }
     public List<AppointmentProcedure> getProcedures() {
         return this.procedures;
     }
