@@ -50,7 +50,9 @@ public class MedicalAppointment {
         return appointment;
     }
 
-    public void reschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator) {}
+    public void reschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator){
+        this.scheduledAt = newScheduledAt;
+    }
 
     public void addProcedure(AppointmentProcedure procedure) {
         this.procedures.add(procedure);
