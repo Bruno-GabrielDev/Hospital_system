@@ -18,6 +18,7 @@ public class MedicalAppointment {
     private LocalDateTime scheduledAt;
     private int rescheduleCount;
     private List<AppointmentProcedure> procedures;
+    private boolean refunded;
 
     private MedicalAppointment() {
         this.status = AppointmentStatus.OPEN;
@@ -42,18 +43,28 @@ public class MedicalAppointment {
         this.status = AppointmentStatus.CLOSED;
     }
 
-    public void markAsBilled() {}
+    public void markAsBilled() {
+        this.status = AppointmentStatus.BILLED;
+    }
 
     public void cancel() {
         if (this.status == AppointmentStatus.CLOSED) {
             throw new IllegalStateException("Closed appointment cannot be canceled.");
         }
+        if (this.status == AppointmentStatus.BILLED) {
+            this.refund();
+        }
+
 
         this.status = AppointmentStatus.CANCELED;
     }
 
     public Money calculateGrossTotal() {
         return null;
+    }
+
+    public void refund() {
+        this.refunded = true;
     }
 
     public UUID getId()                           { return null; }
@@ -66,6 +77,10 @@ public class MedicalAppointment {
     public LocalDateTime getScheduledAt()         { return null; }
     public int getRescheduleCount()               { return 0; }
     public List<AppointmentProcedure> getProcedures() { return null; }
+
+    public boolean isRefunded() {
+        return this.refunded;
+    }
 
     @Override public boolean equals(Object o) { return false; }
     @Override public int hashCode()            { return 0; }
