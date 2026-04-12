@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -118,4 +120,30 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> appointment.cancel("PATIENT_REQUEST"))
                 .withMessage("Cannot cancel an already canceled appointment.");
     }
+
+    @Test
+    @DisplayName("#6 – restore deve retornar instância com todos os valores corretos")
+    void shouldReturnInstanceWithAllCorrectValues() {
+        UUID id = UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11");
+        Patient patient = Patient.of("João", "111", InsuranceType.BASIC);
+        Doctor doctor   = Doctor.of("Dr. Ana", "Ortopedia", "CRM-11");
+        LocalDateTime scheduled = LocalDateTime.of(2026, 5, 1, 10, 0);
+        LocalDateTime created   = LocalDateTime.of(2026, 4, 1, 8, 0);
+
+        MedicalAppointment appointment = MedicalAppointment.restore(
+                id, patient, doctor, scheduled, created,
+                AppointmentStatus.OPEN, 0, List.of()
+        );
+
+        assertThat(appointment).isNotNull();
+        assertThat(appointment.getId()).isEqualTo(id);
+        assertThat(appointment.getPatient()).isEqualTo(patient);
+        assertThat(appointment.getDoctor()).isEqualTo(doctor);
+        assertThat(appointment.getScheduledAt()).isEqualTo(scheduled);
+        assertThat(appointment.getCreatedAt()).isEqualTo(created);
+        assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.OPEN);
+        assertThat(appointment.getRescheduleCount()).isEqualTo(0);
+        assertThat(appointment.getProcedures()).isEmpty();
+    }
 }
+
