@@ -51,6 +51,10 @@ public class MedicalAppointment {
     }
 
     public void reschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator){
+        if(!validator.isAvailable(this.doctor, newScheduledAt)){
+            throw new IllegalStateException("Doctor is not available at this time.");
+        }
+
         this.scheduledAt = newScheduledAt;
     }
 
