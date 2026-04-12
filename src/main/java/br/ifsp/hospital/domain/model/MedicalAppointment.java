@@ -63,7 +63,7 @@ public class MedicalAppointment {
         return null;
     }
 
-    public void refund() {
+    private void refund() {
         this.refunded = true;
     }
 
