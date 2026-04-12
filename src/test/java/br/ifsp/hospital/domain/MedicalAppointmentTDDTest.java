@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-        public class MedicalAppointmentTDDTest {
+public class MedicalAppointmentTDDTest {
 
             @Test
             @UnitTest
@@ -24,5 +25,21 @@ import static org.assertj.core.api.Assertions.assertThat;
                 appointment.cancel();
                 assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
 
+            }
+
+            @Test
+            @UnitTest
+            @TDD
+            void shouldNotCancelClosedAppointment() {
+                Patient dummyPatient = Patient.of("John Doe", "123456789", InsuranceType.BASIC);
+                Doctor dummyDoctor = Doctor.of("John Doe", "Cardiology", "54321");
+                LocalDateTime dummyScheduledAt = LocalDateTime.now().plusDays(1);
+
+                MedicalAppointment appointment = MedicalAppointment.of(dummyPatient, dummyDoctor, dummyScheduledAt);
+                appointment.close();
+
+                assertThatExceptionOfType(IllegalStateException.class)
+                    .isThrownBy(appointment::cancel)
+                    .withMessage("Closed appointment cannot be canceled.");
             }
         }
