@@ -174,6 +174,7 @@ public class MedicalAppointmentTDDTest {
         LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(2);
         DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
 
+        when(validator.isWithinWorkingHours(dummyDoctor, newScheduledAt)).thenReturn(true);
         when(validator.isAvailable(dummyDoctor, newScheduledAt)).thenReturn(true);
 
         appointment.reschedule(newScheduledAt, validator);
@@ -190,6 +191,8 @@ public class MedicalAppointmentTDDTest {
 
         LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(2);
         DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
+
+        when(validator.isWithinWorkingHours(dummyDoctor, newScheduledAt)).thenReturn(true);
         when(validator.isAvailable(dummyDoctor, newScheduledAt)).thenReturn(true);
 
         appointment.reschedule(newScheduledAt, validator);
@@ -206,6 +209,7 @@ public class MedicalAppointmentTDDTest {
         LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(2);
         DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
 
+        when(validator.isWithinWorkingHours(dummyDoctor, newScheduledAt)).thenReturn(true);
         when(validator.isAvailable(dummyDoctor, newScheduledAt)).thenReturn(false);
 
         assertThatExceptionOfType(IllegalStateException.class)

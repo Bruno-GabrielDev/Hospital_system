@@ -50,21 +50,8 @@ public class MedicalAppointment {
         return appointment;
     }
 
-    public void reschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator){
-        if (newScheduledAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Appointment cannot be rescheduled to a past date.");
-        }
-
-        if (this.rescheduleCount >= MAX_RESCHEDULES) {
-            throw new IllegalStateException("Exceeded maximum number of reschedules (" + MAX_RESCHEDULES + ").");
-        }
-
-        if(!validator.isWithinWorkingHours(this.doctor, newScheduledAt)){
-            throw new IllegalStateException("Cannot reschedule to outside of doctor's working hours.");
-        }
-        if(!validator.isAvailable(this.doctor, newScheduledAt)){
-            throw new IllegalStateException("Doctor is not available at this time.");
-        }
+    public void reschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator) {
+        validateReschedule(newScheduledAt, validator);
 
         this.scheduledAt = newScheduledAt;
         this.rescheduleCount++;
@@ -111,6 +98,21 @@ public class MedicalAppointment {
         }
         if (LocalDateTime.now().plusHours(MIN_CANCEL_HOURS).isAfter(this.scheduledAt)) {
             throw new IllegalStateException("Cannot cancel an appointment with less than " + MIN_CANCEL_HOURS + " hours in advance.");
+        }
+    }
+
+    private void validateReschedule(LocalDateTime newScheduledAt, DoctorScheduleValidator validator) {
+        if (newScheduledAt.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Appointment cannot be rescheduled to a past date.");
+        }
+        if (this.rescheduleCount >= MAX_RESCHEDULES) {
+            throw new IllegalStateException("Exceeded maximum number of reschedules (" + MAX_RESCHEDULES + ").");
+        }
+        if (!validator.isWithinWorkingHours(this.doctor, newScheduledAt)) {
+            throw new IllegalStateException("Cannot reschedule to outside of doctor's working hours.");
+        }
+        if (!validator.isAvailable(this.doctor, newScheduledAt)) {
+            throw new IllegalStateException("Doctor is not available at this time.");
         }
     }
 
