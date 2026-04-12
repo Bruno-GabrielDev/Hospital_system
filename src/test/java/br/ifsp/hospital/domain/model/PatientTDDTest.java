@@ -19,7 +19,7 @@ class PatientTDDTest {
     @Test
     @DisplayName("#6 – restore deve retornar instância com todos os valores corretos")
     void shouldReturnPatientInstanceWithAllValuesCorrect() {
-        UUID id = UUID.randomUUID();
+        UUID id = UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11");
         Patient restored = Patient.restore(id, "Ana", "999.999.999-99", InsuranceType.PREMIUM);
 
         assertThat(restored).isNotNull();

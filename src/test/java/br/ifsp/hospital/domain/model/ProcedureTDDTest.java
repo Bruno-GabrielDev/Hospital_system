@@ -18,7 +18,7 @@ class ProcedureTDDTest {
     @Test
     @DisplayName("#6 – restore deve retornar instância com todos os valores corretos")
     void shouldReturnProcedureInstanceWithAllValuesCorrect() {
-        UUID id = UUID.randomUUID();
+        UUID id = UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11");
         Money cost = new Money(new BigDecimal("150.00"));
         Procedure restored = Procedure.restore(id, "Consulta", cost);
 
