@@ -1,5 +1,6 @@
 package br.ifsp.hospital.domain.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Doctor {
@@ -29,6 +30,15 @@ public class Doctor {
     public String getSpecialty() { return specialty; }
     public String getLicense()   { return license; }
 
-    @Override public boolean equals(Object o) { return false; }
-    @Override public int hashCode()            { return 0; }
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(id, doctor.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

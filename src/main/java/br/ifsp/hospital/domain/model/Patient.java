@@ -34,6 +34,15 @@ public class Patient {
     public String getDocument()             { return document; }
     public InsuranceType getInsuranceType() { return insuranceType; }
 
-    @Override public boolean equals(Object o) { return false; }
-    @Override public int hashCode()            { return 0; }
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(id, patient.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
