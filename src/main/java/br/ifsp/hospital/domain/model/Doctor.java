@@ -21,13 +21,13 @@ public class Doctor {
     }
 
     public static Doctor restore(UUID id, String name, String specialty, String license) {
-        return null;
+        return new Doctor(id, name, specialty, license);
     }
 
-    public UUID getId()         { return null; }
-    public String getName()     { return null; }
-    public String getSpecialty(){ return null; }
-    public String getLicense()  { return null; }
+    public UUID getId()          { return id; }
+    public String getName()      { return name; }
+    public String getSpecialty() { return specialty; }
+    public String getLicense()   { return license; }
 
     @Override public boolean equals(Object o) { return false; }
     @Override public int hashCode()            { return 0; }
