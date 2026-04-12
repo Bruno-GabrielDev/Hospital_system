@@ -50,4 +50,12 @@ class InsuranceCoverageServiceTDDTest {
         assertThat(result.getAmount()).isEqualByComparingTo("60.00");
     }
 
+    @Test
+    @DisplayName("#19 – valor coberto pelo plano BASIC = 60.00")
+    void t19_deveRegistrarValorCobertoPeloPlano() {
+        Money coberto = service.getCoveredAmount(total200, InsuranceType.BASIC);
+
+        assertThat(coberto.getAmount()).isEqualByComparingTo("60.00");
+    }
+
 }
