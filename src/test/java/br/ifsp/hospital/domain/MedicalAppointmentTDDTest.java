@@ -237,5 +237,23 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> appointment.reschedule(pastScheduledAt, validator))
                 .withMessage("Appointment cannot be rescheduled to a past date.");
     }
+
+    @Test
+    @DisplayName("Deve bloquear reagendamento se o limite de 3 vezes for excedido (#58)")
+    void shouldBlockRescheduleIfLimitExceeded() {
+        DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
+        when(validator.isAvailable(any(), any())).thenReturn(true);
+        when(validator.isWithinWorkingHours(any(), any())).thenReturn(true);
+
+        appointment.reschedule(LocalDateTime.now().plusDays(2), validator);
+        appointment.reschedule(LocalDateTime.now().plusDays(3), validator);
+        appointment.reschedule(LocalDateTime.now().plusDays(4), validator);
+
+        LocalDateTime fourthAttempt = LocalDateTime.now().plusDays(5);
+
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> appointment.reschedule(fourthAttempt, validator))
+                .withMessage("Exceeded maximum number of reschedules (3).");
+    }
 }
 
