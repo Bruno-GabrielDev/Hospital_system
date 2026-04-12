@@ -60,6 +60,9 @@ public class MedicalAppointment {
         if (reason == null || reason.isBlank()) {
             throw new IllegalArgumentException("Cancellation reason is required.");
         }
+        if (this.status == AppointmentStatus.CANCELED) {
+            throw new IllegalStateException("Cannot cancel an already canceled appointment.");
+        }
         if (this.status == AppointmentStatus.CLOSED) {
             throw new IllegalStateException("Closed appointment cannot be canceled.");
         }
