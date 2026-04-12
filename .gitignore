@@ -6,6 +6,10 @@
 # Datasource local storage ignored files
 /dataSources.local.xml
 
+.idea/dataSources.local.xml
+.idea/compiler.xml
+.idea/workspace.xml
+
 target/
 *.class
 
