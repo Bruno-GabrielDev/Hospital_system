@@ -15,6 +15,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import org.mockito.Mockito;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 @TDD
 @UnitTest
 @DisplayName("TDD – MedicalAppointment")
@@ -162,6 +166,19 @@ public class MedicalAppointmentTDDTest {
         Money total = appointment.calculateGrossTotal();
 
         assertThat(total.getAmount()).isEqualByComparingTo("400.00");
+    }
+
+    @Test
+    @DisplayName("Deve atualizar data e hora quando reagendado para horário vago (#51)")
+    void shouldUpdateDateAndTimeWhenRescheduledToAvailableSlot() {
+        LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(2);
+        DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
+
+        when(validator.isAvailable(dummyDoctor, newScheduledAt)).thenReturn(true);
+
+        appointment.reschedule(newScheduledAt, validator);
+
+        assertThat(appointment.getScheduledAt()).isEqualTo(newScheduledAt);
     }
 }
 
