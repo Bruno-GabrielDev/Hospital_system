@@ -55,6 +55,10 @@ public class MedicalAppointment {
             throw new IllegalArgumentException("Appointment cannot be rescheduled to a past date.");
         }
 
+        if (this.rescheduleCount >= MAX_RESCHEDULES) {
+            throw new IllegalStateException("Exceeded maximum number of reschedules (" + MAX_RESCHEDULES + ").");
+        }
+
         if(!validator.isWithinWorkingHours(this.doctor, newScheduledAt)){
             throw new IllegalStateException("Cannot reschedule to outside of doctor's working hours.");
         }
@@ -63,6 +67,7 @@ public class MedicalAppointment {
         }
 
         this.scheduledAt = newScheduledAt;
+        this.rescheduleCount++;
     }
 
     public void addProcedure(AppointmentProcedure procedure) {
