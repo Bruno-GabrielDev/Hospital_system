@@ -43,4 +43,16 @@ public class MedicalAppointmentTDDTest {
             .isThrownBy(appointment::cancel)
             .withMessage("Closed appointment cannot be canceled.");
     }
+
+    @Test
+    @UnitTest
+    @TDD
+    void shouldCancelBilledAppointmentAndTriggerRefund() {
+        appointment.markAsBilled();
+
+        appointment.cancel();
+
+        assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
+        assertThat(appointment.isRefunded()).isTrue();
+    }
 }
