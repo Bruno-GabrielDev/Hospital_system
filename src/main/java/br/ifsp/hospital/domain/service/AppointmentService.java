@@ -2,6 +2,7 @@ package br.ifsp.hospital.domain.service;
 
 import br.ifsp.hospital.domain.model.*;
 import br.ifsp.hospital.domain.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,7 +39,10 @@ public class AppointmentService {
     }
 
     public MedicalAppointment close(UUID appointmentId) {
-        return null;
+        MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
+        appointment.close();
+        return appointmentRepository.save(appointment);
     }
 
     public MedicalAppointment markAsBilled(UUID appointmentId) {
