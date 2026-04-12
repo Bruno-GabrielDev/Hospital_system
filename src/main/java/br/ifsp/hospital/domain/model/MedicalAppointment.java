@@ -1,5 +1,6 @@
 package br.ifsp.hospital.domain.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,9 @@ public class MedicalAppointment {
     }
 
     public Money calculateGrossTotal() {
-        return null;
+        return procedures.stream()
+                .map(AppointmentProcedure::getTotalCost)
+                .reduce(new Money(BigDecimal.ZERO), Money::add);
     }
 
     private void validateCancellation(String reason) {
