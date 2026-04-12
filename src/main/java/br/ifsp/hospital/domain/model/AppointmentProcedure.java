@@ -7,6 +7,7 @@ public class AppointmentProcedure {
     private final UUID id;
     private final Procedure procedure;
     private final int quantity;
+    private boolean refunded;
 
     private AppointmentProcedure(UUID id, Procedure procedure, int quantity) {
         this.id = id;
@@ -26,6 +27,10 @@ public class AppointmentProcedure {
         this.procedure.cancel();
     }
 
+    public void refund() {
+        this.refunded = true;
+    }
+
     public UUID getId()            { return null; }
     public Procedure getProcedure(){
         return this.procedure;
@@ -35,6 +40,10 @@ public class AppointmentProcedure {
 
     public ProcedureStatus getStatus(){
         return this.getProcedure().getStatus();
+    }
+
+    public boolean isRefunded() {
+        return this.refunded;
     }
 
     @Override public boolean equals(Object o) { return false; }

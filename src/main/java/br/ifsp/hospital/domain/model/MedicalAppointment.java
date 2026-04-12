@@ -62,6 +62,7 @@ public class MedicalAppointment {
         }
         if (this.status == AppointmentStatus.BILLED) {
             this.refund();
+            this.procedures.forEach(AppointmentProcedure::refund);
         }
 
         this.procedures.forEach(AppointmentProcedure::cancel);
