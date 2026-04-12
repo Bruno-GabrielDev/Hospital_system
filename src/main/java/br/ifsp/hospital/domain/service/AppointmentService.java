@@ -50,7 +50,10 @@ public class AppointmentService {
     }
 
     public Money calculateBill(UUID appointmentId) {
-        return null;
+        MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
+        Money gross = appointment.calculateGrossTotal();
+        return insuranceCoverageService.applyCoverage(gross, appointment.getPatient().getInsuranceType());
     }
 
     public MedicalAppointment reschedule(UUID appointmentId, LocalDateTime newScheduledAt) {
