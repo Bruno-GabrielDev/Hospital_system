@@ -18,6 +18,7 @@ public class InsuranceCoverageService {
     }
 
     public Money getCoveredAmount(Money total, InsuranceType insuranceType) {
-        return null;
+        Money patientPays = applyCoverage(total, insuranceType);
+        return total.subtract(patientPays);
     }
 }
