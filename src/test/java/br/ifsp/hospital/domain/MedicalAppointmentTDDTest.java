@@ -180,5 +180,24 @@ public class MedicalAppointmentTDDTest {
 
         assertThat(appointment.getScheduledAt()).isEqualTo(newScheduledAt);
     }
+
+    @Test
+    @DisplayName("Deve manter o estado original (exceto o horário) após reagendamento (#52)")
+    void shouldMaintainOriginalStateExceptTimeWhenRescheduled() {
+        AppointmentStatus initialStatus = appointment.getStatus();
+        Patient initialPatient = appointment.getPatient();
+        Doctor initialDoctor = appointment.getDoctor();
+
+        LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(2);
+        DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
+        when(validator.isAvailable(dummyDoctor, newScheduledAt)).thenReturn(true);
+
+        appointment.reschedule(newScheduledAt, validator);
+
+        assertThat(appointment.getScheduledAt()).isEqualTo(newScheduledAt);
+        assertThat(appointment.getStatus()).isEqualTo(initialStatus);
+        assertThat(appointment.getPatient()).isEqualTo(initialPatient);
+        assertThat(appointment.getDoctor()).isEqualTo(initialDoctor);
+    }
 }
 
