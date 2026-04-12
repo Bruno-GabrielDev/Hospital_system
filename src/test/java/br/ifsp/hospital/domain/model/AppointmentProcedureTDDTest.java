@@ -28,4 +28,11 @@ class AppointmentProcedureTDDTest {
         assertThat(restored.getProcedure()).isEqualTo(procedure);
     }
 
+    @Test
+    @DisplayName("#6 – getTotalCost deve ser custo × quantidade")
+    void totalCostShouldBeCostMultipliedByQuantity() {
+        Procedure procedure = Procedure.of("RX", new Money(new BigDecimal("100.00")));
+        AppointmentProcedure appointmentProcedure = AppointmentProcedure.of(procedure, 3);
+        assertThat(appointmentProcedure.getTotalCost().getAmount()).isEqualByComparingTo("300.00");
+    }
 }
