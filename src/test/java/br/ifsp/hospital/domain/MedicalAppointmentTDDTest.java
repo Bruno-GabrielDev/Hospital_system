@@ -4,6 +4,7 @@ import br.ifsp.hospital.annotation.TDD;
 import br.ifsp.hospital.annotation.UnitTest;
 import br.ifsp.hospital.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -12,6 +13,9 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+@TDD
+@UnitTest
+@DisplayName("TDD – MedicalAppointment")
 public class MedicalAppointmentTDDTest {
 
     private MedicalAppointment appointment;
@@ -28,8 +32,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldCancelOpenAppointment() {
         appointment.cancel("PATIENT_REQUEST");
 
@@ -37,8 +39,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldNotCancelClosedAppointment() {
         appointment.close();
 
@@ -48,8 +48,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldCancelBilledAppointmentAndTriggerRefund() {
         appointment.markAsBilled();
 
@@ -60,8 +58,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldCancelProceduresWhenCancelingAppointment() {
         Procedure dummyProcedure = Procedure.of("Dummy Procedure", new Money(BigDecimal.valueOf(100)));
         AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
@@ -77,8 +73,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldRefundProceduresWhenCancelingBilledAppointment() {
         Procedure dummyProcedure = Procedure.of("Dummy Procedure", new Money(BigDecimal.valueOf(100)));
         AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
@@ -100,8 +94,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldNotCancelAppointmentWithoutReason() {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> appointment.cancel(""))
@@ -109,8 +101,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldNotCancelAppointmentWithLessThanThreeHoursNotice() {
         LocalDateTime urgentScheduledAt = LocalDateTime.now().plusHours(2);
         MedicalAppointment urgentAppointment = MedicalAppointment.of(dummyPatient, dummyDoctor, urgentScheduledAt);
@@ -121,8 +111,6 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @UnitTest
-    @TDD
     void shouldNotCancelAlreadyCanceledAppointment() {
         appointment.cancel("PATIENT_REQUEST");
 
