@@ -1,6 +1,7 @@
 package br.ifsp.hospital.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,12 +21,14 @@ public class MedicalAppointment {
     private List<AppointmentProcedure> procedures;
     private boolean refunded;
 
-    private MedicalAppointment() {
+    private MedicalAppointment(Patient patient, Doctor doctor, LocalDateTime scheduledAt) {
         this.status = AppointmentStatus.OPEN;
+        this.procedures = new ArrayList<>();
+        this.createdAt = LocalDateTime.now();
     }
 
     public static MedicalAppointment of(Patient patient, Doctor doctor, LocalDateTime scheduledAt) {
-        return new MedicalAppointment();
+        return new MedicalAppointment(patient, doctor, scheduledAt);
     }
 
     public static MedicalAppointment restore(UUID id, Patient patient, Doctor doctor,
@@ -37,7 +40,9 @@ public class MedicalAppointment {
 
     public void reschedule(LocalDateTime newScheduledAt) {}
 
-    public void addProcedure(AppointmentProcedure procedure) {}
+    public void addProcedure(AppointmentProcedure procedure) {
+        this.procedures.add(procedure);
+    }
 
     public void close() {
         this.status = AppointmentStatus.CLOSED;
@@ -55,7 +60,7 @@ public class MedicalAppointment {
             this.refund();
         }
 
-
+        this.procedures.forEach(AppointmentProcedure::cancel);
         this.status = AppointmentStatus.CANCELED;
     }
 
@@ -76,7 +81,9 @@ public class MedicalAppointment {
     public LocalDateTime getCreatedAt()           { return null; }
     public LocalDateTime getScheduledAt()         { return null; }
     public int getRescheduleCount()               { return 0; }
-    public List<AppointmentProcedure> getProcedures() { return null; }
+    public List<AppointmentProcedure> getProcedures() {
+        return this.procedures;
+    }
 
     public boolean isRefunded() {
         return this.refunded;

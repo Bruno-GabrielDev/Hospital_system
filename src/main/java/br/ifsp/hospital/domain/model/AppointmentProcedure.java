@@ -15,17 +15,27 @@ public class AppointmentProcedure {
     }
 
     public static AppointmentProcedure of(Procedure procedure, int quantity) {
-        return null;
+        return new AppointmentProcedure(UUID.randomUUID(), procedure, quantity);
     }
 
     public static AppointmentProcedure restore(UUID id, Procedure procedure, int quantity) {
         return null;
     }
 
+    public void cancel() {
+        this.procedure.cancel();
+    }
+
     public UUID getId()            { return null; }
-    public Procedure getProcedure(){ return null; }
+    public Procedure getProcedure(){
+        return this.procedure;
+    }
     public int getQuantity()       { return 0; }
     public Money getTotalCost()    { return null; }
+
+    public ProcedureStatus getStatus(){
+        return this.getProcedure().getStatus();
+    }
 
     @Override public boolean equals(Object o) { return false; }
     @Override public int hashCode()            { return 0; }
