@@ -60,10 +60,13 @@ public class MedicalAppointment {
         if (reason == null || reason.isBlank()) {
             throw new IllegalArgumentException("Cancellation reason is required.");
         }
-
         if (this.status == AppointmentStatus.CLOSED) {
             throw new IllegalStateException("Closed appointment cannot be canceled.");
         }
+        if (LocalDateTime.now().plusHours(3).isAfter(this.scheduledAt)) {
+            throw new IllegalStateException("Cannot cancel an appointment with less than 3 hours in advance.");
+        }
+
         if (this.status == AppointmentStatus.BILLED) {
             this.refund();
             this.procedures.forEach(AppointmentProcedure::refund);
