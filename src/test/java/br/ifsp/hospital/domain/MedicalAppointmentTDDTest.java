@@ -259,5 +259,20 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> appointment.reschedule(fourthAttempt, validator))
                 .withMessage("Exceeded maximum number of reschedules (3).");
     }
+
+    @Test
+    @DisplayName("Deve bloquear a adição de procedimentos quando o limite de 50 for atingido (#61)")
+    void shouldBlockAddingProcedureWhenLimitReached() {
+        Procedure dummyProcedure = Procedure.of("Consulta de Rotina", new Money(BigDecimal.valueOf(100)));
+        AppointmentProcedure ap = AppointmentProcedure.of(dummyProcedure, 1);
+
+        for (int i = 0; i < MedicalAppointment.MAX_PROCEDURES; i++) {
+            appointment.addProcedure(ap);
+        }
+
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> appointment.addProcedure(ap))
+                .withMessage("Cannot add more than " + MedicalAppointment.MAX_PROCEDURES + " procedures to an appointment.");
+    }
 }
 

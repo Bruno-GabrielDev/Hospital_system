@@ -58,6 +58,10 @@ public class MedicalAppointment {
     }
 
     public void addProcedure(AppointmentProcedure procedure) {
+        if (this.procedures.size() >= MAX_PROCEDURES) {
+            throw new IllegalStateException("Cannot add more than " + MAX_PROCEDURES + " procedures to an appointment.");
+        }
+
         this.procedures.add(procedure);
     }
 
