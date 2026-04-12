@@ -26,13 +26,13 @@ public class Patient {
     }
 
     public static Patient restore(UUID id, String name, String document, InsuranceType insuranceType) {
-        return null;
+        return new Patient(id, name, document, insuranceType);
     }
 
-    public UUID getId()                     { return null; }
-    public String getName()                 { return null; }
-    public String getDocument()             { return null; }
-    public InsuranceType getInsuranceType() { return null; }
+    public UUID getId()                     { return id; }
+    public String getName()                 { return name; }
+    public String getDocument()             { return document; }
+    public InsuranceType getInsuranceType() { return insuranceType; }
 
     @Override public boolean equals(Object o) { return false; }
     @Override public int hashCode()            { return 0; }
