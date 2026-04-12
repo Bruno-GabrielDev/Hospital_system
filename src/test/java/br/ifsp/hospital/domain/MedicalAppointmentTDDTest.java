@@ -29,7 +29,7 @@ public class MedicalAppointmentTDDTest {
     @UnitTest
     @TDD
     void shouldCancelOpenAppointment() {
-        appointment.cancel();
+        appointment.cancel("PATIENT_REQUEST");
 
         assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
     }
@@ -41,7 +41,7 @@ public class MedicalAppointmentTDDTest {
         appointment.close();
 
         assertThatExceptionOfType(IllegalStateException.class)
-            .isThrownBy(appointment::cancel)
+            .isThrownBy(() -> appointment.cancel("PATIENT_REQUEST"))
             .withMessage("Closed appointment cannot be canceled.");
     }
 
@@ -51,7 +51,7 @@ public class MedicalAppointmentTDDTest {
     void shouldCancelBilledAppointmentAndTriggerRefund() {
         appointment.markAsBilled();
 
-        appointment.cancel();
+        appointment.cancel("PATIENT_REQUEST");
 
         assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
         assertThat(appointment.isRefunded()).isTrue();
@@ -65,7 +65,7 @@ public class MedicalAppointmentTDDTest {
         AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
 
         appointment.addProcedure(dummyAppointmentProcedure);
-        appointment.cancel();
+        appointment.cancel("PATIENT_REQUEST");
 
         assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
 
@@ -84,7 +84,7 @@ public class MedicalAppointmentTDDTest {
         appointment.addProcedure(dummyAppointmentProcedure);
         appointment.markAsBilled();
 
-        appointment.cancel();
+        appointment.cancel("PATIENT_REQUEST");
 
         assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
         assertThat(appointment.isRefunded()).isTrue();

@@ -56,7 +56,11 @@ public class MedicalAppointment {
         this.status = AppointmentStatus.BILLED;
     }
 
-    public void cancel() {
+    public void cancel(String reason) {
+        if (reason == null || reason.isBlank()) {
+            throw new IllegalArgumentException("Cancellation reason is required.");
+        }
+
         if (this.status == AppointmentStatus.CLOSED) {
             throw new IllegalStateException("Closed appointment cannot be canceled.");
         }
