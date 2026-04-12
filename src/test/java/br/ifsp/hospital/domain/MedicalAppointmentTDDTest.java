@@ -105,4 +105,19 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> appointment.cancel(""))
                 .withMessage("Cancellation reason is required.");
     }
+
+    @Test
+    @UnitTest
+    @TDD
+    void shouldNotCancelAppointmentWithLessThanThreeHoursNotice() {
+        Patient dummyPatient = Patient.of("John Doe", "123456789", InsuranceType.BASIC);
+        Doctor dummyDoctor = Doctor.of("Dr. House", "Cardiology", "54321");
+
+        LocalDateTime urgentScheduledAt = LocalDateTime.now().plusHours(2);
+        MedicalAppointment urgentAppointment = MedicalAppointment.of(dummyPatient, dummyDoctor, urgentScheduledAt);
+
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> urgentAppointment.cancel("PATIENT_REQUEST"))
+                .withMessage("Cannot cancel an appointment with less than 3 hours in advance.");
+    }
 }
