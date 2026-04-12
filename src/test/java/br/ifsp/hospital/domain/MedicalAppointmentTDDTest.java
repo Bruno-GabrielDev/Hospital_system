@@ -212,5 +212,19 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> appointment.reschedule(newScheduledAt, validator))
                 .withMessage("Doctor is not available at this time.");
     }
+
+    @Test
+    @DisplayName("Deve bloquear reagendamento para fora do horário de trabalho do médico (#54)")
+    void shouldBlockRescheduleIfOutsideDoctorWorkingHours() {
+        LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(2).withHour(3).withMinute(0);
+        DoctorScheduleValidator validator = Mockito.mock(DoctorScheduleValidator.class);
+
+        when(validator.isAvailable(dummyDoctor, newScheduledAt)).thenReturn(true);
+        when(validator.isWithinWorkingHours(dummyDoctor, newScheduledAt)).thenReturn(false);
+
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> appointment.reschedule(newScheduledAt, validator))
+                .withMessage("Cannot reschedule to outside of doctor's working hours.");
+    }
 }
 
