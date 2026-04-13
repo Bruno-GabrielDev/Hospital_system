@@ -513,5 +513,19 @@ public class MedicalAppointmentTDDTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("#33 – resultado arredondado para 2 casas decimais")
+    void t33_deveArredondarParaDuasCasas() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Exame", new Money(new BigDecimal("0.005"))), 1));
+
+        Money result = appt.calculateGrossTotal();
+
+        assertThat(result.getAmount().scale()).isEqualTo(2);
+    }
 }
 
