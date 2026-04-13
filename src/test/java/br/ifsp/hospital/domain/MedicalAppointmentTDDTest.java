@@ -540,7 +540,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @DisplayName("#40 – atendimento CLOSED → bloqueia adição de procedimento")
+    @DisplayName("#40/70 – atendimento CLOSED → bloqueia adição de procedimento")
     void t40_deveBloquearEmAtendimentoFechado() {
         Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
         Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
@@ -558,7 +558,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @DisplayName("#41 – quantidade zero → IllegalArgumentException")
+    @DisplayName("#41/71 – quantidade zero → IllegalArgumentException")
     void t41a_deveRejeitarQuantidadeZero() {
         Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
 
@@ -567,7 +567,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @DisplayName("#41 – quantidade negativa → IllegalArgumentException")
+    @DisplayName("#41/71 – quantidade negativa → IllegalArgumentException")
     void t41b_deveRejeitarQuantidadeNegativa() {
         Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
 
