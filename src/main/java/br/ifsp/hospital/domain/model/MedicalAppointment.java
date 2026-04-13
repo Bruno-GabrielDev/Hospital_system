@@ -23,6 +23,7 @@ public class MedicalAppointment {
     private int rescheduleCount;
     private List<AppointmentProcedure> procedures;
     private boolean refunded;
+    private boolean receiptIssued;
 
     private MedicalAppointment(Patient patient, Doctor doctor, LocalDateTime scheduledAt) {
         this.patient = patient;
@@ -80,7 +81,11 @@ public class MedicalAppointment {
     }
 
     public void markAsBilled() {
+        if (this.status != AppointmentStatus.CLOSED) {
+            throw new IllegalStateException("Atendimento deve estar fechado para ser faturado.");
+        }
         this.status = AppointmentStatus.BILLED;
+        this.receiptIssued = true;
     }
 
     public void cancel(String reason) {
@@ -154,6 +159,9 @@ public class MedicalAppointment {
     public int getRescheduleCount() { return rescheduleCount; }
     public List<AppointmentProcedure> getProcedures() {
         return this.procedures;
+    }
+    public boolean isReceiptIssued() {
+        return receiptIssued;
     }
 
     public boolean isRefunded() {
