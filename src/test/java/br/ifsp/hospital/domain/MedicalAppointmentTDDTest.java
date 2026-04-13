@@ -274,5 +274,17 @@ public class MedicalAppointmentTDDTest {
                 .isThrownBy(() -> appointment.addProcedure(ap))
                 .withMessage("Cannot add more than " + MedicalAppointment.MAX_PROCEDURES + " procedures to an appointment.");
     }
+
+    @Test
+    @DisplayName("#5 – paciente cadastrado → status inicial OPEN")
+    void t05_deveCriarComStatusOpen() {
+        Patient patient = Patient.of("Lucas", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. House", "Infectologista", "CRM-001");
+        LocalDateTime future = LocalDateTime.now().plusDays(1);
+
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor, future);
+
+        assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.OPEN);
+    }
 }
 
