@@ -85,6 +85,9 @@ public class MedicalAppointment {
     }
 
     public Money calculateGrossTotal() {
+        if (procedures.isEmpty())
+            throw new IllegalStateException("Atendimento sem procedimentos: não é possível calcular a conta.");
+
         return procedures.stream()
                 .map(AppointmentProcedure::getTotalCost)
                 .reduce(new Money(BigDecimal.ZERO), Money::add);
