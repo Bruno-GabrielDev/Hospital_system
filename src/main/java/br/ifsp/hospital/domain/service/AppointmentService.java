@@ -78,7 +78,12 @@ public class AppointmentService {
     }
 
     public MedicalAppointment reschedule(UUID appointmentId, LocalDateTime newScheduledAt) {
-        return null;
+        MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
+
+        appointment.reschedule(newScheduledAt, doctorScheduleValidator);
+
+        return appointmentRepository.save(appointment);
     }
 
     public MedicalAppointment cancel(UUID appointmentId, String reason) {
