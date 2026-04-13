@@ -1,5 +1,7 @@
 package br.ifsp.hospital.functional;
 
+import br.ifsp.hospital.annotation.Functional;
+import br.ifsp.hospital.annotation.UnitTest;
 import br.ifsp.hospital.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +13,8 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+@Functional
+@UnitTest
 @DisplayName("Testes Funcionais – MedicalAppointment")
 public class MedicalAppointmentFunctionalTest {
 
