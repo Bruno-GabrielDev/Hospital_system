@@ -311,5 +311,17 @@ public class MedicalAppointmentTDDTest {
         assertThat(appt.getPatient().getInsuranceType()).isEqualTo(InsuranceType.BASIC);
     }
 
+    @Test
+    @DisplayName("#9 – paciente sem seguro → registrado como NONE")
+    void t09_deveRegistrarComoParticular() {
+        Patient patient = Patient.of("Carimbo", "333", InsuranceType.NONE);
+        Doctor doctor = Doctor.of("Dr. Ricardo", "Psiquiatra", "CRM-991");
+        LocalDateTime future = LocalDateTime.now().plusDays(1);
+
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor, future);
+
+        assertThat(appt.getPatient().getInsuranceType()).isEqualTo(InsuranceType.NONE);
+    }
+
 }
 
