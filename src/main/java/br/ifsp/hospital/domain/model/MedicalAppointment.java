@@ -144,6 +144,26 @@ public class MedicalAppointment {
         this.procedures.forEach(AppointmentProcedure::refund);
     }
 
+    public String generateMedicalReport() {
+        if (this.status != AppointmentStatus.BILLED) {
+            throw new IllegalStateException("Relatório só pode ser gerado após o faturamento.");
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("=== RELATÓRIO MÉDICO ===\n");
+        builder.append("Paciente: ").append(patient.getName()).append("\n");
+        builder.append("Médico: ").append(doctor.getName()).append(" - ").append(doctor.getSpecialty()).append("\n");
+        builder.append("Data: ").append(scheduledAt).append("\n");
+        builder.append("Procedimentos realizados:\n");
+
+        procedures.forEach(p ->
+                builder.append("- ").append(p.getProcedure().getName())
+                        .append(" (Qtd: ").append(p.getQuantity()).append(")\n")
+        );
+
+        return builder.toString();
+    }
+
     private void refund() {
         this.refunded = true;
     }
