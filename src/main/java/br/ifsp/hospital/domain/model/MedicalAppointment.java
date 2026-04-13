@@ -69,6 +69,13 @@ public class MedicalAppointment {
     }
 
     public void close() {
+        boolean hasOpenProcedures = this.procedures.stream()
+                .anyMatch(p -> p.getStatus() == ProcedureStatus.OPEN);
+
+        if (hasOpenProcedures) {
+            throw new IllegalStateException("Não é possível fechar o atendimento: existem procedimentos pendentes.");
+        }
+
         this.status = AppointmentStatus.CLOSED;
     }
 

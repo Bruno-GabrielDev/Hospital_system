@@ -25,6 +25,9 @@ public class Procedure {
         return new Procedure(id, name, cost);
     }
 
+    public void complete() {
+        this.status = ProcedureStatus.CLOSED;
+    }
     public void cancel() {
         this.status = ProcedureStatus.CANCELED;
     }
