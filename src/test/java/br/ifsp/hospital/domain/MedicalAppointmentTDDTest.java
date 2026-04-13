@@ -323,5 +323,20 @@ public class MedicalAppointmentTDDTest {
         assertThat(appt.getPatient().getInsuranceType()).isEqualTo(InsuranceType.NONE);
     }
 
+    @Test
+    @DisplayName("#11 – um procedimento → soma seu custo")
+    void t11_deveSomarUmProcedimento() {
+        Patient patient = Patient.of("Brino", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Samuel", "Pediatra", "CRM-811");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+
+        Money total = appt.calculateGrossTotal();
+
+        assertThat(total.getAmount()).isEqualByComparingTo("200.00");
+    }
+
 }
 
