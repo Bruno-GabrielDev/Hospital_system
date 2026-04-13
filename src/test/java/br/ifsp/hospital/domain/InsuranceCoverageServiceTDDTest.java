@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @UnitTest
 @TDD
 @DisplayName("TDD – InsuranceCoverageService (#16–#20)")
-
 class InsuranceCoverageServiceTDDTest {
     private InsuranceCoverageService service;
     private Money total200;
@@ -65,6 +64,4 @@ class InsuranceCoverageServiceTDDTest {
 
         assertThat(result.getAmount()).isEqualByComparingTo("200.00");
     }
-
-
 }

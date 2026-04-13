@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -96,7 +98,38 @@ class AppointmentServiceTDDTest {
         appointment.close();
 
         when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
-        Money bill = sut.calculateBill(appointmentId);
-        assertThat(bill.getAmount()).isEqualByComparingTo("140.00");
+        BillDetail bill = sut.calculateBill(appointmentId);
+        assertThat(bill.patientAmount().getAmount()).isEqualByComparingTo("140.00");
+    }
+
+    @ParameterizedTest(name = "#31 {0}: paciente paga {2}, convênio cobre {3}")
+    @CsvSource({
+            "BASIC,   Carlos, 140.00, 60.00",
+            "PREMIUM, Ana,     60.00, 140.00",
+            "NONE,    Pedro,  200.00,   0.00"
+    })
+    void shouldCalculateCorrectAmountsBasedOnInsurancePlan(
+            InsuranceType type,
+            String name,
+            String expectedPatient,
+            String expectedInsurance)
+    {
+        Patient patient = Patient.of(name, "000.000.000-00", type);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-SP 123456");
+        MedicalAppointment appointment = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.of(2026, 5, 1, 10, 0));
+
+        appointment.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+        appointment.close();
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
+
+        BillDetail bill = sut.calculateBill(appointmentId);
+
+        assertThat(bill.grossTotal().getAmount()).isEqualByComparingTo("200.00");
+        assertThat(bill.patientAmount().getAmount()).isEqualByComparingTo(expectedPatient);
+        assertThat(bill.insuranceAmount().getAmount()).isEqualByComparingTo(expectedInsurance);
+        assertThat(bill.insuranceType()).isEqualTo(type);
     }
 }
