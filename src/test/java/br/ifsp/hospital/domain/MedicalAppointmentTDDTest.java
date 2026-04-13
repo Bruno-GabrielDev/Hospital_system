@@ -460,5 +460,14 @@ public class MedicalAppointmentTDDTest {
         assertThat(appt.getProcedures()).hasSize(1);
     }
 
+    @Test
+    @DisplayName("#38 – procedimento com custo → valor armazenado")
+    void t38_deveRegistrarCusto() {
+        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        AppointmentProcedure ap = AppointmentProcedure.of(proc, 1);
+
+        assertThat(ap.getTotalCost().getAmount()).isEqualByComparingTo("200.00");
+    }
+
 }
 
