@@ -59,6 +59,7 @@ public class MedicalAppointmentTDDTest {
     @Test
     @DisplayName("Deve estornar paciente ao cancelar com sucesso um appointment billed (#45)")
     void shouldCancelBilledAppointmentAndTriggerRefund() {
+        appointment.close();
         appointment.markAsBilled();
 
         appointment.cancel("PATIENT_REQUEST");
@@ -90,6 +91,10 @@ public class MedicalAppointmentTDDTest {
         AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
 
         appointment.addProcedure(dummyAppointmentProcedure);
+
+        dummyProcedure.complete();
+        appointment.close();
+
         appointment.markAsBilled();
 
         appointment.cancel("PATIENT_REQUEST");
@@ -446,12 +451,14 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @DisplayName("#25 – atendimento OPEN → conta solicitada → status muda para BILLED")
-    void t25_devePermitirFaturamentoDireto() {
+    @DisplayName("#25 – atendimento OPEN → fechado → status muda para BILLED")
+    void t25_devePermitirFaturamentoAposFechar() {
         Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
         Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
         MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
                 LocalDateTime.now().plusDays(1));
+
+        appt.close();
         appt.markAsBilled();
 
         assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.BILLED);
@@ -466,6 +473,36 @@ public class MedicalAppointmentTDDTest {
         assertThatExceptionOfType(IllegalStateException.class)
                 .isThrownBy(() -> appointment.close())
                 .withMessage("Não é possível fechar o atendimento: existem procedimentos pendentes.");
+    }
+
+    @Test
+    @DisplayName("#30 – Deve emitir comprovante automaticamente ao marcar como faturado (BILLED)")
+    void shouldIssueReceiptAutomaticallyWhenMarkedAsBilled() {
+        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        appointment.addProcedure(AppointmentProcedure.of(proc, 1));
+        proc.complete();
+        appointment.close();
+
+        appointment.markAsBilled();
+
+        // Assert
+        assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.BILLED);
+        assertThat(appointment.isReceiptIssued()).isTrue();
+    }
+
+    @Test
+    @DisplayName("#33 – resultado arredondado para 2 casas decimais")
+    void t33_deveArredondarParaDuasCasas() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Exame", new Money(new BigDecimal("0.005"))), 1));
+
+        Money result = appt.calculateGrossTotal();
+
+        assertThat(result.getAmount().scale()).isEqualTo(2);
     }
 
     @Test
@@ -538,19 +575,5 @@ public class MedicalAppointmentTDDTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    @DisplayName("#33 – resultado arredondado para 2 casas decimais")
-    void t33_deveArredondarParaDuasCasas() {
-        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
-        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
-        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
-                LocalDateTime.now().plusDays(1));
-        appt.addProcedure(AppointmentProcedure.of(
-                Procedure.of("Exame", new Money(new BigDecimal("0.005"))), 1));
-
-        Money result = appt.calculateGrossTotal();
-
-        assertThat(result.getAmount().scale()).isEqualTo(2);
-    }
 }
 
