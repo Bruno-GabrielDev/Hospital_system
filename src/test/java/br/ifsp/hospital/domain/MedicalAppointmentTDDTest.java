@@ -454,6 +454,17 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("#29 – deve impedir fechamento se houver procedimentos com status OPEN")
+    void shouldBlockClosingIfProceduresAreStillOpen() {
+        Procedure procedure = Procedure.of("Exame de Sangue", new Money(new BigDecimal("100.00")));
+        appointment.addProcedure(AppointmentProcedure.of(procedure, 1));
+
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> appointment.close())
+                .withMessage("Não é possível fechar o atendimento: existem procedimentos pendentes.");
+    }
+
+    @Test
     @DisplayName("#37 – atendimento OPEN → procedimento registrado")
     void t37_deveRegistrarProcedimento() {
         Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
