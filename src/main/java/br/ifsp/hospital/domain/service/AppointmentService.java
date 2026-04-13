@@ -79,7 +79,12 @@ public class AppointmentService {
     }
 
     public MedicalAppointment cancel(UUID appointmentId, String reason) {
-        return null;
+        MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
+
+        appointment.cancel(reason);
+
+        return appointmentRepository.save(appointment);
     }
 
     public MedicalAppointment findById(UUID id) {
