@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.math.RoundingMode;
 
 public class MedicalAppointment {
 
@@ -90,11 +91,12 @@ public class MedicalAppointment {
         if (procedures.isEmpty())
             throw new IllegalStateException("Atendimento sem procedimentos: não é possível calcular a conta.");
 
-        return procedures.stream()
+        Money total = procedures.stream()
                 .map(AppointmentProcedure::getTotalCost)
                 .reduce(new Money(BigDecimal.ZERO), Money::add);
-    }
 
+        return new Money(total.getAmount().setScale(2, RoundingMode.HALF_UP));
+    }
     private void validateCancellation(String reason) {
         if (reason == null || reason.isBlank()) {
             throw new IllegalArgumentException("Cancellation reason is required.");
