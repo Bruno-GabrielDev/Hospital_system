@@ -198,4 +198,15 @@ class AppointmentServiceTDDTest {
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Atendimento não encontrado");
     }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao tentar reagendar atendimento inexistente na base")
+    void shouldThrowExceptionWhenReschedulingNonExistentAppointment() {
+        when(appointmentRepository.findById(appointmentId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sut.reschedule(appointmentId, LocalDateTime.now().plusDays(2)))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Atendimento não encontrado");
+    }
 }
