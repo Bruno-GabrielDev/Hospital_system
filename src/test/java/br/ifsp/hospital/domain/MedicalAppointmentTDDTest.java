@@ -417,5 +417,21 @@ public class MedicalAppointmentTDDTest {
         assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.CLOSED);
     }
 
+    @Test
+    @DisplayName("#24 – faturar após fechamento → status BILLED")
+    void t24_deveMudarParaBilled() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+        appt.close();
+
+        appt.markAsBilled();
+
+        assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.BILLED);
+    }
+
 }
 
