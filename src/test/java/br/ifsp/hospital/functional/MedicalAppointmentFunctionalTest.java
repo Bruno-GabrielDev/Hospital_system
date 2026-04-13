@@ -28,7 +28,8 @@ public class MedicalAppointmentFunctionalTest {
     @CsvSource({
             "-1, false", // Valor limite inferior (Partição Inválida)
             "0, false",  // Valor limite exato (Partição Inválida)
-            "1, true"    // Valor limite válido (Partição Válida)
+            "1, true",    // Valor limite válido (Partição Válida)
+            "10, true"   // Valor nominal (Partição Válida)
     })
     void testProcedureQuantityBoundary(int quantity, boolean isValid) {
         Procedure dummyProcedure = Procedure.of("Consulta", new Money(BigDecimal.valueOf(100)));
