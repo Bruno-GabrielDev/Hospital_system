@@ -85,7 +85,7 @@ class AppointmentServiceTDDTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    @DisplayName("#26/31 Should calculate correct amounts based on insurance plan")
+    @DisplayName("#26/31/23 Should calculate correct amounts based on insurance plan")
     @ParameterizedTest(name = " {0}: paciente paga {2}, convênio cobre {3}")
     @CsvSource({
             "BASIC,   Carlos, 140.00, 60.00",

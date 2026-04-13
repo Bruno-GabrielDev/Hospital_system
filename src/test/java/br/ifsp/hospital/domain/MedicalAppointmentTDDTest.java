@@ -165,7 +165,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @DisplayName("#26 – calculateGrossTotal deve somar o custo de todos os procedimentos")
+    @DisplayName("#26/22 – calculateGrossTotal deve somar o custo de todos os procedimentos")
     void calculateGrossTotalMaySumCostsOfAllProcedures() {
         Patient patient = Patient.of("João", "111", InsuranceType.BASIC);
         Doctor doctor  = Doctor.of("Dr. Ana", "Ortopedia", "CRM-11");
@@ -353,7 +353,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
-    @DisplayName("#12 – múltiplos procedimentos → soma todos")
+    @DisplayName("#12/22 – múltiplos procedimentos → soma todos")
     void t12_deveSomarMultiplos() {
         Patient patient = Patient.of("Bruno", "119", InsuranceType.BASIC);
         Doctor doctor = Doctor.of("Dr. Pereira", "Anestesista", "CRM-421");
