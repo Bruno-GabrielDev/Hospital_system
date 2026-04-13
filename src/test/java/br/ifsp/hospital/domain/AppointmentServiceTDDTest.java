@@ -85,7 +85,8 @@ class AppointmentServiceTDDTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    @ParameterizedTest(name = "#26/31 {0}: paciente paga {2}, convênio cobre {3}")
+    @DisplayName("#26/31 Should calculate correct amounts based on insurance plan")
+    @ParameterizedTest(name = " {0}: paciente paga {2}, convênio cobre {3}")
     @CsvSource({
             "BASIC,   Carlos, 140.00, 60.00",
             "PREMIUM, Ana,     60.00, 140.00",
@@ -116,5 +117,29 @@ class AppointmentServiceTDDTest {
         assertThat(bill.patientAmount().getAmount()).isEqualByComparingTo(expectedPatient);
         assertThat(bill.insuranceAmount().getAmount()).isEqualByComparingTo(expectedInsurance);
         assertThat(bill.insuranceType()).isEqualTo(type);
+    }
+
+    @Test
+    @DisplayName("#68/69 – Deve lançar exceção se o procedimento não existir ao adicionar")
+    void shouldThrowExceptionWhenAddingProcedureThatDoesNotExist() {
+        UUID invalidProcedureId = UUID.randomUUID();
+
+        when(procedureRepository.findById(invalidProcedureId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sut.addProcedure(appointmentId, invalidProcedureId, 1))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("#74/75 – Deve lançar exceção se o atendimento não existir ao adicionar procedimento")
+    void shouldThrowExceptionWhenAddingProcedureToNonExistentAppointment() {
+        UUID validProcedureId = UUID.randomUUID();
+        Procedure dummyProc = Procedure.of("Raio-X", new Money(new BigDecimal("150.00")));
+
+        when(procedureRepository.findById(validProcedureId)).thenReturn(Optional.of(dummyProc));
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sut.addProcedure(appointmentId, validProcedureId, 1))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 }
