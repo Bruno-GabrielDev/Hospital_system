@@ -575,5 +575,24 @@ public class MedicalAppointmentTDDTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("#76 – Deve gerar relatório médico automaticamente após o pagamento (BILLED)")
+    @UnitTest
+    void shouldGenerateMedicalReportAfterPayment() {
+        Procedure proc = Procedure.of("Hemograma", new Money(new BigDecimal("50.00")));
+        appointment.addProcedure(AppointmentProcedure.of(proc, 1));
+        proc.complete();
+        appointment.close();
+        appointment.markAsBilled();
+
+        String report = appointment.generateMedicalReport();
+
+        assertThat(report)
+                .contains("RELATÓRIO MÉDICO")
+                .contains(appointment.getPatient().getName())
+                .contains(appointment.getDoctor().getName())
+                .contains("Hemograma");
+    }
+
 }
 
