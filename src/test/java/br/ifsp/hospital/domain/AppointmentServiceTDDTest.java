@@ -149,4 +149,20 @@ class AppointmentServiceTDDTest {
         assertThatThrownBy(() -> sut.addProcedure(appointmentId, validProcedureId, 1))
                 .isInstanceOf(EntityNotFoundException.class);
     }
+
+    @Test
+    @DisplayName("Deve cancelar o atendimento, salvar no repositório e liberar a agenda (#49 / #43)")
+    void shouldCancelAppointmentAndSave() {
+        String reason = "Paciente teve um imprevisto";
+        when(appointmentRepository.findById(appointmentId))
+                .thenReturn(Optional.of(appointment));
+        when(appointmentRepository.save(appointment))
+                .thenReturn(appointment);
+
+        MedicalAppointment result = sut.cancel(appointmentId, reason);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
+        verify(appointmentRepository).save(appointment);
+    }
 }

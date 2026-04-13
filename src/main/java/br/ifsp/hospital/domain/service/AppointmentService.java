@@ -78,6 +78,10 @@ public class AppointmentService {
         return null;
     }
 
+    public MedicalAppointment cancel(UUID appointmentId, String reason) {
+        return null;
+    }
+
     public MedicalAppointment findById(UUID id) {
         return null;
     }
