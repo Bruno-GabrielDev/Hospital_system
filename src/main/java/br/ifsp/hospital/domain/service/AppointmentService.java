@@ -35,9 +35,17 @@ public class AppointmentService {
     }
 
     public MedicalAppointment addProcedure(UUID appointmentId, UUID procedureId, int quantity) {
-        return null;
-    }
+        Procedure procedure = procedureRepository.findById(procedureId)
+                .orElseThrow(() -> new EntityNotFoundException("Procedimento não encontrado: " + procedureId));
 
+        MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
+
+        AppointmentProcedure appointmentProcedure = AppointmentProcedure.of(procedure, quantity);
+        appointment.addProcedure(appointmentProcedure);
+
+        return appointmentRepository.save(appointment);
+    }
     public MedicalAppointment close(UUID appointmentId) {
         MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
