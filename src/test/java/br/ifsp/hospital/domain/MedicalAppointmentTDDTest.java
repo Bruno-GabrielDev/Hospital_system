@@ -402,5 +402,20 @@ public class MedicalAppointmentTDDTest {
         assertThat(depois.getAmount()).isEqualByComparingTo("300.00");
     }
 
+    @Test
+    @DisplayName("#21 – fechar com procedimentos → status CLOSED")
+    void t21_deveMudarParaClosed() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+
+        appt.close();
+
+        assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.CLOSED);
+    }
+
 }
 
