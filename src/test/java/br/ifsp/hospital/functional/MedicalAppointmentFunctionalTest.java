@@ -7,12 +7,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.ArgumentMatchers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Functional
 @UnitTest
@@ -53,7 +56,7 @@ public class MedicalAppointmentFunctionalTest {
     @DisplayName("AVL: Cancelamento com horas de antecedência nas fronteiras")
     @CsvSource({
             "2, false", // Valor limite inferior (Partição Inválida - Bloqueia)
-            "3, true"   // Valor limite exato (Partição Válida - Permite)
+            "3, true",  // Valor limite exato (Partição Válida - Permite)
     })
     void testCancellationTimeBoundary(int hoursInAdvance, boolean isAllowed) {
         LocalDateTime scheduledAt = LocalDateTime.now().plusHours(hoursInAdvance);
@@ -66,6 +69,35 @@ public class MedicalAppointmentFunctionalTest {
             assertThatExceptionOfType(IllegalStateException.class)
                     .isThrownBy(() -> appointment.cancel("Imprevisto"))
                     .withMessageContaining("Cannot cancel an appointment with less than");
+        }
+    }
+
+    @ParameterizedTest(name = "[{index}] Tentativa nº: {0} -> Esperado sucesso: {1}")
+    @DisplayName("AVL: Tentativas de reagendamento até e além do limite")
+    @CsvSource({
+            "1, true",  // Primeira tentativa (Partição Válida)
+    })
+    void testRescheduleLimitBoundary(int attemptsTarget, boolean shouldSucceedOnLast) {
+        MedicalAppointment appointment = MedicalAppointment.of(dummyPatient, dummyDoctor, LocalDateTime.now().plusDays(1));
+
+        DoctorScheduleValidator validator = mock(DoctorScheduleValidator.class);
+        when(validator.isWithinWorkingHours(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(true);
+        when(validator.isAvailable(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(true);
+
+        for (int i = 1; i < attemptsTarget; i++) {
+            appointment.reschedule(LocalDateTime.now().plusDays(1 + i), validator);
+        }
+
+        LocalDateTime lastAttemptDate = LocalDateTime.now().plusDays(10);
+
+        if (shouldSucceedOnLast) {
+            appointment.reschedule(lastAttemptDate, validator);
+            assertThat(appointment.getScheduledAt()).isEqualTo(lastAttemptDate);
+            assertThat(appointment.getRescheduleCount()).isEqualTo(attemptsTarget);
+        } else {
+            assertThatExceptionOfType(IllegalStateException.class)
+                    .isThrownBy(() -> appointment.reschedule(lastAttemptDate, validator))
+                    .withMessageContaining("Exceeded maximum number of reschedules");
         }
     }
 }
