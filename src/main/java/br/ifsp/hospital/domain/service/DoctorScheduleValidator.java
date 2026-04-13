@@ -1,4 +1,6 @@
-package br.ifsp.hospital.domain.model;
+package br.ifsp.hospital.domain.service;
+
+import br.ifsp.hospital.domain.model.Doctor;
 
 import java.time.LocalDateTime;
 

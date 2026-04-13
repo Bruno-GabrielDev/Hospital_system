@@ -1,5 +1,7 @@
 package br.ifsp.hospital.domain.model;
 
+import br.ifsp.hospital.domain.service.DoctorScheduleValidator;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

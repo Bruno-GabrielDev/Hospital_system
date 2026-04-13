@@ -3,6 +3,7 @@ package br.ifsp.hospital.domain;
 import br.ifsp.hospital.annotation.TDD;
 import br.ifsp.hospital.annotation.UnitTest;
 import br.ifsp.hospital.domain.model.*;
+import br.ifsp.hospital.domain.service.DoctorScheduleValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

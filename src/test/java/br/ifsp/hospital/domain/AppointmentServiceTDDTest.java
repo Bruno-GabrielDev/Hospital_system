@@ -5,6 +5,7 @@ import br.ifsp.hospital.annotation.UnitTest;
 import br.ifsp.hospital.domain.model.*;
 import br.ifsp.hospital.domain.repository.*;
 import br.ifsp.hospital.domain.service.AppointmentService;
+import br.ifsp.hospital.domain.service.DoctorScheduleValidator;
 import br.ifsp.hospital.domain.service.InsuranceCoverageService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +36,8 @@ class AppointmentServiceTDDTest {
     @Mock PatientRepository patientRepository;
     @Mock DoctorRepository doctorRepository;
     @Mock ProcedureRepository procedureRepository;
-    @Mock DoctorScheduleValidator doctorScheduleValidator;
+    @Mock
+    DoctorScheduleValidator doctorScheduleValidator;
 
     AppointmentService sut;
 
