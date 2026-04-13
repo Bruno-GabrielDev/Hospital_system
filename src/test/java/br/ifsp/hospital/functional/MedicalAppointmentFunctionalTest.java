@@ -27,6 +27,7 @@ public class MedicalAppointmentFunctionalTest {
     @DisplayName("AVL: Criação de procedimento com quantidades nas fronteiras")
     @CsvSource({
             "-1, false", // Valor limite inferior (Partição Inválida)
+            "0, false",  // Valor limite exato (Partição Inválida)
     })
     void testProcedureQuantityBoundary(int quantity, boolean isValid) {
         Procedure dummyProcedure = Procedure.of("Consulta", new Money(BigDecimal.valueOf(100)));
