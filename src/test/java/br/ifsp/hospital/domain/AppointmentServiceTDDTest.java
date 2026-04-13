@@ -187,4 +187,15 @@ class AppointmentServiceTDDTest {
         assertThat(result.getScheduledAt()).isEqualTo(newScheduledAt);
         verify(appointmentRepository).save(appointment);
     }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao tentar cancelar atendimento inexistente na base")
+    void shouldThrowExceptionWhenCancelingNonExistentAppointment() {
+        when(appointmentRepository.findById(appointmentId))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sut.cancel(appointmentId, "Motivo válido"))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Atendimento não encontrado");
+    }
 }
