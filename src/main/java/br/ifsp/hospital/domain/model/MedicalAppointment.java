@@ -58,6 +58,8 @@ public class MedicalAppointment {
     }
 
     public void addProcedure(AppointmentProcedure procedure) {
+        if (status != AppointmentStatus.OPEN)
+            throw new IllegalStateException("Não é possível adicionar procedimentos: atendimento não está aberto.");
         if (this.procedures.size() >= MAX_PROCEDURES) {
             throw new IllegalStateException("Cannot add more than " + MAX_PROCEDURES + " procedures to an appointment.");
         }
