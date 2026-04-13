@@ -22,6 +22,7 @@ class InsuranceCoverageServiceTDDTest {
         service  = new InsuranceCoverageService();
         total200 = new Money(new BigDecimal("200.00"));
     }
+
     @Test
     @DisplayName("#18 – NONE → sem desconto (paciente paga 100% = 200.00)")
     void t18_semDescontoParaNone() {

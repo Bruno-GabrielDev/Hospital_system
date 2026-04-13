@@ -131,6 +131,13 @@ class AppointmentServiceTDDTest {
     }
 
     @Test
+    @DisplayName("#73 – Deve lançar exceção se o ID do procedimento for nulo")
+    void shouldThrowExceptionWhenProcedureIdIsNull() {
+        assertThatThrownBy(() -> sut.addProcedure(appointmentId, null, 1))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("#74/75 – Deve lançar exceção se o atendimento não existir ao adicionar procedimento")
     void shouldThrowExceptionWhenAddingProcedureToNonExistentAppointment() {
         UUID validProcedureId = UUID.randomUUID();
