@@ -495,5 +495,23 @@ public class MedicalAppointmentTDDTest {
                 .isInstanceOf(IllegalStateException.class);
     }
 
+    @Test
+    @DisplayName("#41 – quantidade zero → IllegalArgumentException")
+    void t41a_deveRejeitarQuantidadeZero() {
+        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+
+        assertThatThrownBy(() -> AppointmentProcedure.of(proc, 0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("#41 – quantidade negativa → IllegalArgumentException")
+    void t41b_deveRejeitarQuantidadeNegativa() {
+        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+
+        assertThatThrownBy(() -> AppointmentProcedure.of(proc, -1))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }
 
