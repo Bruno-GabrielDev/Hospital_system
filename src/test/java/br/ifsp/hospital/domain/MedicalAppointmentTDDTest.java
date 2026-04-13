@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -368,6 +369,18 @@ public class MedicalAppointmentTDDTest {
         Money total = appt.calculateGrossTotal();
 
         assertThat(total.getAmount()).isEqualByComparingTo("150.00");
+    }
+
+    @Test
+    @DisplayName("#14 – sem procedimentos → IllegalStateException")
+    void t14_deveBloquearCalculoSemProcedimentos() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+
+        assertThatThrownBy(() -> appt.calculateGrossTotal())
+                .isInstanceOf(IllegalStateException.class);
     }
 
 }
