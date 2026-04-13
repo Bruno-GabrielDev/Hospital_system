@@ -17,17 +17,20 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final ProcedureRepository procedureRepository;
     private final InsuranceCoverageService insuranceCoverageService;
+    private final DoctorScheduleValidator doctorScheduleValidator;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               PatientRepository patientRepository,
                               DoctorRepository doctorRepository,
                               ProcedureRepository procedureRepository,
-                              InsuranceCoverageService insuranceCoverageService) {
+                              InsuranceCoverageService insuranceCoverageService,
+                              DoctorScheduleValidator doctorScheduleValidator) {
         this.appointmentRepository    = appointmentRepository;
         this.patientRepository        = patientRepository;
         this.doctorRepository         = doctorRepository;
         this.procedureRepository      = procedureRepository;
         this.insuranceCoverageService = insuranceCoverageService;
+        this.doctorScheduleValidator = doctorScheduleValidator;
     }
 
     public MedicalAppointment create(UUID patientId, UUID doctorId, LocalDateTime scheduledAt) {

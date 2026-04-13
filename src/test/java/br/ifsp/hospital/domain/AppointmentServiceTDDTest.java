@@ -35,6 +35,7 @@ class AppointmentServiceTDDTest {
     @Mock PatientRepository patientRepository;
     @Mock DoctorRepository doctorRepository;
     @Mock ProcedureRepository procedureRepository;
+    @Mock DoctorScheduleValidator doctorScheduleValidator;
 
     AppointmentService sut;
 
@@ -50,13 +51,14 @@ class AppointmentServiceTDDTest {
                 patientRepository,
                 doctorRepository,
                 procedureRepository,
-                new InsuranceCoverageService()
+                new InsuranceCoverageService(),
+                doctorScheduleValidator
         );
 
         patient = Patient.of("Carlos", "111.222.333-44", InsuranceType.BASIC);
         doctor  = Doctor.of("Dr. Silva", "Cardiologia", "CRM-SP 123456");
         appointment = MedicalAppointment.of(patient, doctor,
-                LocalDateTime.of(2026, 4, 11, 10, 0));
+                LocalDateTime.now().plusDays(1));
         appointmentId = UUID.fromString("568374d2-990c-4395-9988-82e666a4f208");
     }
 
@@ -163,6 +165,26 @@ class AppointmentServiceTDDTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getStatus()).isEqualTo(AppointmentStatus.CANCELED);
+        verify(appointmentRepository).save(appointment);
+    }
+
+    @Test
+    @DisplayName("Deve reagendar o atendimento, salvar no repositório e liberar a agenda antiga (#57 / #50)")
+    void shouldRescheduleAppointmentAndSave() {
+        LocalDateTime newScheduledAt = LocalDateTime.now().plusDays(5);
+
+        when(appointmentRepository.findById(appointmentId))
+                .thenReturn(Optional.of(appointment));
+        when(appointmentRepository.save(appointment))
+                .thenReturn(appointment);
+
+        when(doctorScheduleValidator.isWithinWorkingHours(doctor, newScheduledAt)).thenReturn(true);
+        when(doctorScheduleValidator.isAvailable(doctor, newScheduledAt)).thenReturn(true);
+
+        MedicalAppointment result = sut.reschedule(appointmentId, newScheduledAt);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getScheduledAt()).isEqualTo(newScheduledAt);
         verify(appointmentRepository).save(appointment);
     }
 }
