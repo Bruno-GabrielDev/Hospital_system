@@ -35,6 +35,10 @@ public class AppointmentService {
     }
 
     public MedicalAppointment addProcedure(UUID appointmentId, UUID procedureId, int quantity) {
+        if (procedureId == null) {
+            throw new IllegalArgumentException("ID do procedimento é obrigatório.");
+        }
+
         Procedure procedure = procedureRepository.findById(procedureId)
                 .orElseThrow(() -> new EntityNotFoundException("Procedimento não encontrado: " + procedureId));
 
