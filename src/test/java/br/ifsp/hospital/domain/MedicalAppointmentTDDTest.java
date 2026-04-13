@@ -39,6 +39,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve cancelar com sucesso um appointment (#43)")
     void shouldCancelOpenAppointment() {
         appointment.cancel("PATIENT_REQUEST");
 
@@ -46,6 +47,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve lançar exceção ao tentar cancelar appointment closed (#44)")
     void shouldNotCancelClosedAppointment() {
         appointment.close();
 
@@ -55,6 +57,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve estornar paciente ao cancelar com sucesso um appointment billed (#45)")
     void shouldCancelBilledAppointmentAndTriggerRefund() {
         appointment.markAsBilled();
 
@@ -65,6 +68,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve cancelar procedimentos associados ao cancelar com sucesso um appointment (#46)")
     void shouldCancelProceduresWhenCancelingAppointment() {
         Procedure dummyProcedure = Procedure.of("Dummy Procedure", new Money(BigDecimal.valueOf(100)));
         AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
@@ -80,6 +84,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve estornar procedimentos associados ao cancelar com sucesso um appointment billed (#47)")
     void shouldRefundProceduresWhenCancelingBilledAppointment() {
         Procedure dummyProcedure = Procedure.of("Dummy Procedure", new Money(BigDecimal.valueOf(100)));
         AppointmentProcedure dummyAppointmentProcedure = AppointmentProcedure.of(dummyProcedure, 2);
@@ -101,6 +106,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve bloquear cancelamento sem motivo (#48)")
     void shouldNotCancelAppointmentWithoutReason() {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> appointment.cancel(""))
@@ -108,6 +114,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve bloquear cancelamento com menos de 3 horas de antecedência (#59)")
     void shouldNotCancelAppointmentWithLessThanThreeHoursNotice() {
         LocalDateTime urgentScheduledAt = LocalDateTime.now().plusHours(2);
         MedicalAppointment urgentAppointment = MedicalAppointment.of(dummyPatient, dummyDoctor, urgentScheduledAt);
@@ -118,6 +125,7 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("Deve bloquear cancelamento de um appointment já canceled (#60)")
     void shouldNotCancelAlreadyCanceledAppointment() {
         appointment.cancel("PATIENT_REQUEST");
 
