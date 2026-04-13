@@ -290,13 +290,26 @@ public class MedicalAppointmentTDDTest {
     @Test
     @DisplayName("#7 – médico selecionado → associado ao atendimento")
     void t07_deveAssociarMedico() {
-        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
-        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        Patient patient = Patient.of("Carlos", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. lombardi", "Cardiologia", "CRM-201");
         LocalDateTime future = LocalDateTime.now().plusDays(1);
 
         MedicalAppointment appt = MedicalAppointment.of(patient, doctor, future);
 
         assertThat(appt.getDoctor()).isEqualTo(doctor);
     }
+
+    @Test
+    @DisplayName("#8 – paciente com seguro → tipo de seguro registrado")
+    void t08_deveRegistrarSeguro() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Oftomologista", "CRM-021");
+        LocalDateTime future = LocalDateTime.now().plusDays(1);
+
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor, future);
+
+        assertThat(appt.getPatient().getInsuranceType()).isEqualTo(InsuranceType.BASIC);
+    }
+
 }
 
