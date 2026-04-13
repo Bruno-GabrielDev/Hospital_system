@@ -16,6 +16,8 @@ public class AppointmentProcedure {
     }
 
     public static AppointmentProcedure of(Procedure procedure, int quantity) {
+        if (quantity <= 0)
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero.");
         return new AppointmentProcedure(UUID.randomUUID(), procedure, quantity);
     }
 
