@@ -58,4 +58,13 @@ class InsuranceCoverageServiceTDDTest {
         assertThat(coberto.getAmount()).isEqualByComparingTo("60.00");
     }
 
+    @Test
+    @DisplayName("#20 – seguro null → sem desconto")
+    void t20_semDescontoParaSeguroNulo() {
+        Money result = service.applyCoverage(total200, null);
+
+        assertThat(result.getAmount()).isEqualByComparingTo("200.00");
+    }
+
+
 }
