@@ -286,5 +286,17 @@ public class MedicalAppointmentTDDTest {
 
         assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.OPEN);
     }
+
+    @Test
+    @DisplayName("#7 – médico selecionado → associado ao atendimento")
+    void t07_deveAssociarMedico() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        LocalDateTime future = LocalDateTime.now().plusDays(1);
+
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor, future);
+
+        assertThat(appt.getDoctor()).isEqualTo(doctor);
+    }
 }
 
