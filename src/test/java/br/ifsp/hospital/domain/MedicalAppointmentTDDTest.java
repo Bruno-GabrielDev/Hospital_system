@@ -338,5 +338,22 @@ public class MedicalAppointmentTDDTest {
         assertThat(total.getAmount()).isEqualByComparingTo("200.00");
     }
 
+    @Test
+    @DisplayName("#12 – múltiplos procedimentos → soma todos")
+    void t12_deveSomarMultiplos() {
+        Patient patient = Patient.of("Bruno", "119", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Pereira", "Anestesista", "CRM-421");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Raio-X", new Money(new BigDecimal("150.00"))), 1));
+
+        Money total = appt.calculateGrossTotal();
+
+        assertThat(total.getAmount()).isEqualByComparingTo("350.00");
+    }
+
 }
 
