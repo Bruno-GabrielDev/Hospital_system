@@ -383,5 +383,24 @@ public class MedicalAppointmentTDDTest {
                 .isInstanceOf(IllegalStateException.class);
     }
 
+    @Test
+    @DisplayName("#15 – novo procedimento adicionado → recalcula total")
+    void t15_deveRecalcularAposNovoProc() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Sullivan", "Cardiologia", "CRM-009");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+        Money antes = appt.calculateGrossTotal();
+
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Exame", new Money(new BigDecimal("100.00"))), 1));
+        Money depois = appt.calculateGrossTotal();
+
+        assertThat(depois.getAmount()).isGreaterThan(antes.getAmount());
+        assertThat(depois.getAmount()).isEqualByComparingTo("300.00");
+    }
+
 }
 
