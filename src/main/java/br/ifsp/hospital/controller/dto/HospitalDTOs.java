@@ -119,4 +119,6 @@ public final class HospitalDTOs {
     }
 
     public record BillResponse(UUID appointmentId, BigDecimal totalWithCoverage) {}
+
+    public record CancelRequest(String reason) {}
 }

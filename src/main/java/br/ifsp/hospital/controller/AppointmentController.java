@@ -96,4 +96,15 @@ public class AppointmentController {
                 appointmentService.findByDoctor(doctorId).stream()
                         .map(AppointmentResponse::from).toList());
     }
+
+    @Operation(summary = "Cancelar atendimento", description = "Cancela o atendimento e libera a agenda do médico.")
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<AppointmentResponse> cancel(
+            @PathVariable UUID id,
+            @RequestBody CancelRequest request) {
+
+        var appt = appointmentService.cancel(id, request.reason());
+
+        return ResponseEntity.ok(AppointmentResponse.from(appt));
+    }
 }
