@@ -417,8 +417,10 @@ public class MedicalAppointmentTDDTest {
         Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
         MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
                 LocalDateTime.now().plusDays(1));
-        appt.addProcedure(AppointmentProcedure.of(
-                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+
+        Procedure consulta = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        appt.addProcedure(AppointmentProcedure.of(consulta, 1));
+        consulta.complete();
 
         appt.close();
 
@@ -432,10 +434,12 @@ public class MedicalAppointmentTDDTest {
         Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
         MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
                 LocalDateTime.now().plusDays(1));
-        appt.addProcedure(AppointmentProcedure.of(
-                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
-        appt.close();
 
+        Procedure consulta = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        appt.addProcedure(AppointmentProcedure.of(consulta, 1));
+        consulta.complete();
+
+        appt.close();
         appt.markAsBilled();
 
         assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.BILLED);
@@ -505,8 +509,10 @@ public class MedicalAppointmentTDDTest {
         Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
         MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
                 LocalDateTime.now().plusDays(1));
-        appt.addProcedure(AppointmentProcedure.of(
-                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+
+        Procedure consulta = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        appt.addProcedure(AppointmentProcedure.of(consulta, 1));
+        consulta.complete();
         appt.close();
 
         assertThatThrownBy(() -> appt.addProcedure(AppointmentProcedure.of(
