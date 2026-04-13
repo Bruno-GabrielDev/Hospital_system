@@ -1,6 +1,7 @@
 package br.ifsp.hospital.controller;
 
 import br.ifsp.hospital.controller.dto.HospitalDTOs.*;
+import br.ifsp.hospital.domain.model.BillDetail;
 import br.ifsp.hospital.domain.service.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,8 +49,8 @@ public class AppointmentController {
     @Operation(summary = "Calcular conta com cobertura do plano")
     @GetMapping("/{id}/bill")
     public ResponseEntity<BillResponse> calculateBill(@PathVariable UUID id) {
-        var total = appointmentService.calculateBill(id);
-        return ResponseEntity.ok(new BillResponse(id, total.getAmount()));
+        BillDetail detail = appointmentService.calculateBill(id);
+        return ResponseEntity.ok(new BillResponse(id, detail.patientAmount().getAmount()));
     }
 
     @Operation(summary = "Faturar atendimento", description = "Status muda para BILLED.")

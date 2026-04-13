@@ -49,11 +49,17 @@ public class AppointmentService {
         return null;
     }
 
-    public Money calculateBill(UUID appointmentId) {
+    public BillDetail calculateBill(UUID appointmentId) {
         MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
-        Money gross = appointment.calculateGrossTotal();
-        return insuranceCoverageService.applyCoverage(gross, appointment.getPatient().getInsuranceType());
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Atendimento não encontrado: " + appointmentId));
+
+        InsuranceType insuranceType  = appointment.getPatient().getInsuranceType();
+        Money grossTotal             = appointment.calculateGrossTotal();
+        Money patientAmount          = insuranceCoverageService.applyCoverage(grossTotal, insuranceType);
+        Money insuranceAmount        = insuranceCoverageService.getCoveredAmount(grossTotal, insuranceType);
+
+        return new BillDetail(appointmentId, grossTotal, patientAmount, insuranceAmount, insuranceType);
     }
 
     public MedicalAppointment reschedule(UUID appointmentId, LocalDateTime newScheduledAt) {
