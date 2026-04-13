@@ -469,5 +469,15 @@ public class MedicalAppointmentTDDTest {
         assertThat(ap.getTotalCost().getAmount()).isEqualByComparingTo("200.00");
     }
 
+    @Test
+    @DisplayName("#39 – quantidade > 1 → custo total = unitário × quantidade")
+    void t39_deveMultiplicarCusto() {
+        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+
+        AppointmentProcedure ap = AppointmentProcedure.of(proc, 3);
+
+        assertThat(ap.getTotalCost().getAmount()).isEqualByComparingTo("600.00");
+    }
+
 }
 
