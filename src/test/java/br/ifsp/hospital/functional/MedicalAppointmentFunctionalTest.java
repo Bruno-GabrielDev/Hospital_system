@@ -76,6 +76,7 @@ public class MedicalAppointmentFunctionalTest {
     @DisplayName("AVL: Tentativas de reagendamento até e além do limite")
     @CsvSource({
             "1, true",  // Primeira tentativa (Partição Válida)
+            "3, true"   // Valor limite exato (Partição Válida - Última permitida)
     })
     void testRescheduleLimitBoundary(int attemptsTarget, boolean shouldSucceedOnLast) {
         MedicalAppointment appointment = MedicalAppointment.of(dummyPatient, dummyDoctor, LocalDateTime.now().plusDays(1));
