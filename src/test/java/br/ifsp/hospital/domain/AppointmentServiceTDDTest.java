@@ -85,24 +85,7 @@ class AppointmentServiceTDDTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    @Test
-    @DisplayName("#26/#31 – calculateBill deve aplicar cobertura do convênio ao total bruto")
-    void calculateBillShouldApplyInsuranceType() {
-        Patient patientBasic = Patient.of("Carlos", "222", InsuranceType.BASIC);
-        Doctor doctor = Doctor.of("Dr. Ana", "Ortopedia", "CRM-22");
-        MedicalAppointment appointment = MedicalAppointment.of(patientBasic, doctor,
-                LocalDateTime.of(2026, 5, 1, 10, 0));
-
-        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
-        appointment.addProcedure(AppointmentProcedure.of(proc, 1));
-        appointment.close();
-
-        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
-        BillDetail bill = sut.calculateBill(appointmentId);
-        assertThat(bill.patientAmount().getAmount()).isEqualByComparingTo("140.00");
-    }
-
-    @ParameterizedTest(name = "#31 {0}: paciente paga {2}, convênio cobre {3}")
+    @ParameterizedTest(name = "#26/31 {0}: paciente paga {2}, convênio cobre {3}")
     @CsvSource({
             "BASIC,   Carlos, 140.00, 60.00",
             "PREMIUM, Ana,     60.00, 140.00",
@@ -119,8 +102,10 @@ class AppointmentServiceTDDTest {
         MedicalAppointment appointment = MedicalAppointment.of(patient, doctor,
                 LocalDateTime.of(2026, 5, 1, 10, 0));
 
-        appointment.addProcedure(AppointmentProcedure.of(
-                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1));
+        Procedure consulta = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        appointment.addProcedure(AppointmentProcedure.of(consulta, 1));
+        consulta.complete();
+
         appointment.close();
 
         when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
