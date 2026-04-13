@@ -445,5 +445,20 @@ public class MedicalAppointmentTDDTest {
         assertThat(appt.getStatus()).isEqualTo(AppointmentStatus.BILLED);
     }
 
+    @Test
+    @DisplayName("#37 – atendimento OPEN → procedimento registrado")
+    void t37_deveRegistrarProcedimento() {
+        Patient patient = Patient.of("Bruno", "111", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-001");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        AppointmentProcedure ap = AppointmentProcedure.of(
+                Procedure.of("Consulta", new Money(new BigDecimal("200.00"))), 1);
+
+        appt.addProcedure(ap);
+
+        assertThat(appt.getProcedures()).hasSize(1);
+    }
+
 }
 
