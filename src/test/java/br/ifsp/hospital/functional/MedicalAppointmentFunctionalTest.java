@@ -4,6 +4,7 @@ import br.ifsp.hospital.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.math.BigDecimal;
 
@@ -24,6 +25,9 @@ public class MedicalAppointmentFunctionalTest {
 
     @ParameterizedTest(name = "[{index}] Quantidade: {0} -> Esperado válido: {1}")
     @DisplayName("AVL: Criação de procedimento com quantidades nas fronteiras")
+    @CsvSource({
+            "-1, false", // Valor limite inferior (Partição Inválida)
+    })
     void testProcedureQuantityBoundary(int quantity, boolean isValid) {
         Procedure dummyProcedure = Procedure.of("Consulta", new Money(BigDecimal.valueOf(100)));
 
