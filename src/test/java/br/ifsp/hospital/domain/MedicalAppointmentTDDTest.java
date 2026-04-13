@@ -355,5 +355,20 @@ public class MedicalAppointmentTDDTest {
         assertThat(total.getAmount()).isEqualByComparingTo("350.00");
     }
 
+    @Test
+    @DisplayName("#13 – quantidade > 1 → multiplica pelo unitário")
+    void t13_deveMultiplicarQuantidade() {
+        Patient patient = Patient.of("Caio", "351", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Candido", "Oncologista", "CRM-100");
+        MedicalAppointment appt = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.now().plusDays(1));
+        appt.addProcedure(AppointmentProcedure.of(
+                Procedure.of("Hemograma", new Money(new BigDecimal("50.00"))), 3));
+
+        Money total = appt.calculateGrossTotal();
+
+        assertThat(total.getAmount()).isEqualByComparingTo("150.00");
+    }
+
 }
 
