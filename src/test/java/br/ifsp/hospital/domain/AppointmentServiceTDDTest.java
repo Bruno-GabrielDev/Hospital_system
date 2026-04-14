@@ -67,6 +67,20 @@ class AppointmentServiceTDDTest {
     }
 
     @Test
+    @DisplayName("#10/67 – Deve lançar exceção ao tentar criar atendimento para paciente inexistente")
+    void shouldThrowExceptionWhenCreatingAppointmentForNonExistentPatient() {
+        UUID invalidPatientId = UUID.randomUUID();
+        UUID validDoctorId = UUID.randomUUID();
+
+        LocalDateTime validDate = LocalDateTime.of(2030, 5, 1, 10, 0);
+
+        when(patientRepository.findById(invalidPatientId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sut.create(invalidPatientId, validDoctorId, validDate))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
     @DisplayName("#26 – deve fechar o atendimento e retornar com status CLOSED")
     void shouldCloseAndReturnStatusClosed() {
         when(appointmentRepository.findById(appointmentId))
@@ -296,5 +310,31 @@ class AppointmentServiceTDDTest {
         assertThatThrownBy(() -> sut.reschedule(appointmentId, LocalDateTime.now().plusDays(2)))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Atendimento não encontrado");
+    }
+
+    @Test
+    @DisplayName("Happy Path – Deve criar um atendimento com sucesso quando todos os dados são válidos")
+    void shouldCreateAppointmentSuccessfully() {
+        UUID validPatientId = UUID.randomUUID();
+        UUID validDoctorId = UUID.randomUUID();
+        LocalDateTime validDate = LocalDateTime.of(2030, 5, 1, 10, 0);
+
+        when(patientRepository.findById(validPatientId)).thenReturn(Optional.of(patient));
+        when(appointmentRepository.findByPatientIdAndStatus(validPatientId, AppointmentStatus.OPEN))
+                .thenReturn(Collections.emptyList());
+        when(doctorRepository.findById(validDoctorId)).thenReturn(Optional.of(doctor));
+        when(doctorScheduleValidator.isAvailable(doctor, validDate)).thenReturn(true);
+        when(appointmentRepository.save(any(MedicalAppointment.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        MedicalAppointment result = sut.create(validPatientId, validDoctorId, validDate);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getPatient()).isEqualTo(patient);
+        assertThat(result.getDoctor()).isEqualTo(doctor);
+        assertThat(result.getStatus()).isEqualTo(AppointmentStatus.OPEN);
+        assertThat(result.getScheduledAt()).isEqualTo(validDate);
+
+        verify(appointmentRepository).save(any(MedicalAppointment.class));
     }
 }
