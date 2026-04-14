@@ -36,7 +36,22 @@ public class AppointmentService {
     }
 
     public MedicalAppointment create(UUID patientId, UUID doctorId, LocalDateTime scheduledAt) {
-        return null;
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado: " + patientId));
+
+        List<MedicalAppointment> openAppointments = appointmentRepository
+                .findByPatientIdAndStatus(patientId, AppointmentStatus.OPEN);
+
+        if (!openAppointments.isEmpty()) {
+            throw new IllegalStateException("Paciente já possui um atendimento em aberto.");
+        }
+
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new EntityNotFoundException("Médico não encontrado: " + doctorId));
+
+        MedicalAppointment appointment = MedicalAppointment.of(patient, doctor, scheduledAt);
+
+        return appointmentRepository.save(appointment);
     }
 
     public MedicalAppointment addProcedure(UUID appointmentId, UUID procedureId, int quantity) {

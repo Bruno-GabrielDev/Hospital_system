@@ -1,5 +1,6 @@
 package br.ifsp.hospital.domain.repository;
 
+import br.ifsp.hospital.domain.model.AppointmentStatus;
 import br.ifsp.hospital.domain.model.MedicalAppointment;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,5 @@ public interface AppointmentRepository {
     /** Verifica conflito de horário para o médico (#62, #63, #53) */
     List<MedicalAppointment> findByDoctorIdAndScheduledAt(UUID doctorId, LocalDateTime scheduledAt);
 
-    /** Verifica se paciente já tem atendimento aberto (#32) */
-    Optional<MedicalAppointment> findOpenByPatientId(UUID patientId);
+    List<MedicalAppointment> findByPatientIdAndStatus(UUID patientId, AppointmentStatus status);
 }
