@@ -35,10 +35,10 @@ public class MedicalAppointmentFunctionalTest {
     @ParameterizedTest(name = "[{index}] Quantidade: {0} -> Esperado válido: {1}")
     @DisplayName("AVL: Criação de procedimento com quantidades nas fronteiras")
     @CsvSource({
-            "-1, false", // Valor limite inferior (Partição Inválida)
-            "0, false",  // Valor limite exato (Partição Inválida)
-            "1, true",    // Valor limite válido (Partição Válida)
-            "10, true"   // Valor nominal (Partição Válida)
+            "-1, false",
+            "0, false",
+            "1, true",
+            "10, true"
     })
     void testProcedureQuantityBoundary(int quantity, boolean isValid) {
         Procedure dummyProcedure = Procedure.of("Consulta", new Money(BigDecimal.valueOf(100)));
@@ -56,8 +56,8 @@ public class MedicalAppointmentFunctionalTest {
     @ParameterizedTest(name = "[{index}] Horas de antecedência: {0} -> Esperado permitido: {1}")
     @DisplayName("AVL: Cancelamento com horas de antecedência nas fronteiras")
     @CsvSource({
-            "2, false", // Valor limite inferior (Partição Inválida - Bloqueia)
-            "3, true",  // Valor limite exato (Partição Válida - Permite)
+            "2, false",
+            "3, true",
     })
     void testCancellationTimeBoundary(int hoursInAdvance, boolean isAllowed) {
         LocalDateTime scheduledAt = LocalDateTime.now().plusHours(hoursInAdvance);
@@ -76,9 +76,9 @@ public class MedicalAppointmentFunctionalTest {
     @ParameterizedTest(name = "[{index}] Tentativa nº: {0} -> Esperado sucesso: {1}")
     @DisplayName("AVL: Tentativas de reagendamento até e além do limite")
     @CsvSource({
-            "1, true",  // Primeira tentativa (Partição Válida)
-            "3, true",   // Valor limite exato (Partição Válida - Última permitida)
-            "4, false"  // Valor limite excedido (Partição Inválida - Bloqueio)
+            "1, true",
+            "3, true",
+            "4, false"
     })
     void testRescheduleLimitBoundary(int attemptsTarget, boolean shouldSucceedOnLast) {
         MedicalAppointment appointment = MedicalAppointment.of(dummyPatient, dummyDoctor, LocalDateTime.now().plusDays(1));
