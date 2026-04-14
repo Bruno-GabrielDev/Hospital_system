@@ -9,6 +9,7 @@ public class Procedure {
     private final String name;
     private final Money cost;
     private ProcedureStatus status;
+    private int gracePeriodDays = 0;
 
     private Procedure(UUID id, String name, Money cost) {
         this.id = id;
@@ -32,6 +33,9 @@ public class Procedure {
         this.status = ProcedureStatus.CANCELED;
     }
 
+    public void setGracePeriodDays(int days) { this.gracePeriodDays = days; }
+
+    public int getGracePeriodDays() { return gracePeriodDays; }
     public UUID getId()    { return id; }
     public String getName(){ return name; }
     public Money getCost() { return cost; }

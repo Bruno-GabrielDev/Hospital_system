@@ -1,5 +1,6 @@
 package br.ifsp.hospital.domain.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,6 +10,8 @@ public class Patient {
     private final String name;
     private final String document;
     private final InsuranceType insuranceType;
+    private LocalDate planEnrollmentDate = LocalDate.now().minusYears(5);
+
 
     private Patient(UUID id, String name, String document, InsuranceType insuranceType) {
         this.id = id;
@@ -29,6 +32,9 @@ public class Patient {
         return new Patient(id, name, document, insuranceType);
     }
 
+    public void setPlanEnrollmentDate(LocalDate date) { this.planEnrollmentDate = date; }
+
+    public LocalDate getPlanEnrollmentDate() { return planEnrollmentDate; }
     public UUID getId()                     { return id; }
     public String getName()                 { return name; }
     public String getDocument()             { return document; }

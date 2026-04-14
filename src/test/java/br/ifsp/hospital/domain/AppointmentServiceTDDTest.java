@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -161,6 +162,35 @@ class AppointmentServiceTDDTest {
                 .isInstanceOf(IllegalStateException.class);
     }
 
+    @Test
+    @DisplayName("#34 – Procedimento em período de carência temporal não deve receber desconto de seguro")
+    void shouldNotApplyDiscountIfProcedureIsInGracePeriodTemporal() {
+        Patient patientBasic = Patient.of("Carlos", "222", InsuranceType.BASIC);
+        patientBasic.setPlanEnrollmentDate(LocalDate.of(2030, 4, 20));
+
+        LocalDateTime appointmentDate = LocalDateTime.of(2030, 4, 30, 10, 0);
+        MedicalAppointment appt = MedicalAppointment.of(patientBasic, doctor, appointmentDate);
+
+        Procedure p1 = Procedure.of("Exame Complexo", new Money(new BigDecimal("100.00")));
+        p1.setGracePeriodDays(180);
+        appt.addProcedure(AppointmentProcedure.of(p1, 1));
+        p1.complete();
+
+        Procedure p2 = Procedure.of("Consulta", new Money(new BigDecimal("100.00")));
+        p2.setGracePeriodDays(0);
+        appt.addProcedure(AppointmentProcedure.of(p2, 1));
+        p2.complete();
+
+        appt.close();
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appt));
+
+        BillDetail bill = sut.calculateBill(appointmentId);
+
+        assertThat(bill.grossTotal().getAmount()).isEqualByComparingTo("200.00");
+        assertThat(bill.patientAmount().getAmount()).isEqualByComparingTo("170.00");
+        assertThat(bill.insuranceAmount().getAmount()).isEqualByComparingTo("30.00");
+    }
 
     @Test
     @DisplayName("#35 – Deve gerar duas faturas distintas (Paciente e Convênio) se houver seguro")
