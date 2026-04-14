@@ -180,6 +180,25 @@ class AppointmentServiceTDDTest {
     }
 
     @Test
+    @DisplayName("#62 / #63 – Deve impedir criação se o médico já possuir atendimento no mesmo horário")
+    void shouldBlockCreationIfDoctorIsUnavailable() {
+        UUID validPatientId = UUID.randomUUID();
+        UUID validDoctorId = UUID.randomUUID();
+
+        LocalDateTime validDate = LocalDateTime.of(2030, 5, 1, 10, 0);
+
+        when(patientRepository.findById(validPatientId)).thenReturn(Optional.of(patient));
+        when(appointmentRepository.findByPatientIdAndStatus(validPatientId, AppointmentStatus.OPEN))
+                .thenReturn(Collections.emptyList());
+        when(doctorRepository.findById(validDoctorId)).thenReturn(Optional.of(doctor));
+
+        when(doctorScheduleValidator.isAvailable(doctor, validDate)).thenReturn(false);
+
+        assertThatThrownBy(() -> sut.create(validPatientId, validDoctorId, validDate))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
     @DisplayName("#65 / #66 – Deve impedir criação se a data do atendimento estiver no passado")
     void shouldBlockCreationIfDateIsInThePast() {
         UUID validPatientId = UUID.randomUUID();
