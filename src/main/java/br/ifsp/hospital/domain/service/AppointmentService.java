@@ -53,6 +53,10 @@ public class AppointmentService {
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new EntityNotFoundException("Médico não encontrado: " + doctorId));
 
+        if (!doctorScheduleValidator.isAvailable(doctor, scheduledAt)) {
+            throw new IllegalStateException("Médico indisponível neste horário.");
+        }
+
         MedicalAppointment appointment = MedicalAppointment.of(patient, doctor, scheduledAt);
 
         return appointmentRepository.save(appointment);

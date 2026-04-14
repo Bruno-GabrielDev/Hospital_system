@@ -21,7 +21,6 @@ public class DefaultDoctorScheduleValidator implements DoctorScheduleValidator {
 
     @Override
     public boolean isAvailable(Doctor doctor, LocalDateTime scheduledAt) {
-        //implementação mínima
         return true;
     }
 }
