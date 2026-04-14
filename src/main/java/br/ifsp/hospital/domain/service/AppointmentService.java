@@ -5,7 +5,9 @@ import br.ifsp.hospital.domain.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,6 +55,7 @@ public class AppointmentService {
 
         return appointmentRepository.save(appointment);
     }
+
     public MedicalAppointment close(UUID appointmentId) {
         MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + appointmentId));
@@ -104,6 +107,16 @@ public class AppointmentService {
     public List<MedicalAppointment> findByDoctor(UUID doctorId)   { return null; }
 
     public List<Invoice> generateInvoices(UUID appointmentId) {
-        return null;
+        BillDetail bill = this.calculateBill(appointmentId);
+
+        List<Invoice> invoices = new ArrayList<>();
+
+        invoices.add(new Invoice(appointmentId, InvoiceType.PATIENT, bill.patientAmount()));
+
+        if (bill.insuranceAmount().getAmount().compareTo(BigDecimal.ZERO) > 0) {
+            invoices.add(new Invoice(appointmentId, InvoiceType.INSURANCE, bill.insuranceAmount()));
+        }
+
+        return invoices;
     }
 }
