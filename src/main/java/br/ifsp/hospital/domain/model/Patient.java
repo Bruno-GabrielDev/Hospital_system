@@ -21,10 +21,11 @@ public class Patient {
     }
 
     public static Patient of(String name, String document, InsuranceType insuranceType) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome é obrigatório.");
+        }
         Objects.requireNonNull(insuranceType, "Tipo de seguro é obrigatório.");
-        Objects.requireNonNull(name, "Nome é obrigatório.");
-        if (name.isBlank())
-            throw new IllegalArgumentException("Nome não pode ser vazio.");
+
         return new Patient(UUID.randomUUID(), name, document, insuranceType);
     }
 

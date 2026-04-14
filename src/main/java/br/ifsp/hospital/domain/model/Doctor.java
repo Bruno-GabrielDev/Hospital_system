@@ -18,6 +18,9 @@ public class Doctor {
     }
 
     public static Doctor of(String name, String specialty, String license) {
+        if (license == null || license.trim().isEmpty()) {
+            throw new IllegalArgumentException("A licença (license) do médico é obrigatória.");
+        }
         return new Doctor(UUID.randomUUID(), name, specialty, license);
     }
 
