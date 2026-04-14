@@ -125,9 +125,29 @@ class AppointmentServiceTDDTest {
     }
 
     @Test
+    @DisplayName("#32 – Deve impedir criação se o paciente já possui atendimento OPEN")
+    void shouldBlockCreationIfPatientAlreadyHasOpenAppointment() {
+        UUID validPatientId = UUID.randomUUID();
+        UUID validDoctorId = UUID.randomUUID();
+        LocalDateTime scheduledAt = LocalDateTime.now().plusDays(1);
+
+        Patient patient = Patient.of("Ana", "123", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-123");
+
+        when(patientRepository.findById(validPatientId)).thenReturn(Optional.of(patient));
+        when(doctorRepository.findById(validDoctorId)).thenReturn(Optional.of(doctor));
+
+        MedicalAppointment openAppointment = MedicalAppointment.of(patient, doctor, LocalDateTime.now());
+        when(appointmentRepository.findByPatientIdAndStatus(validPatientId, AppointmentStatus.OPEN))
+                .thenReturn(List.of(openAppointment));
+
+        assertThatThrownBy(() -> sut.create(validPatientId, validDoctorId, scheduledAt))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
     @DisplayName("#35 – Deve gerar duas faturas distintas (Paciente e Convênio) se houver seguro")
     void shouldGenerateTwoDistinctInvoicesIfInsuranceExists() {
-        // Arrange
         Patient patientBasic = Patient.of("Carlos", "222", InsuranceType.BASIC);
         Doctor doctor = Doctor.of("Dr. Ana", "Ortopedia", "CRM-22");
         MedicalAppointment appointment = MedicalAppointment.of(patientBasic, doctor,
