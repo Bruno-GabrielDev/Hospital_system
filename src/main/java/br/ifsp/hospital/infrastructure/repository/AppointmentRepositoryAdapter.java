@@ -78,8 +78,8 @@ public class AppointmentRepositoryAdapter implements AppointmentRepository {
     }
 
     @Override
-    public Optional<MedicalAppointment> findOpenByPatientId(UUID patientId) {
-        return jpa.findByPatientIdAndStatus(patientId, AppointmentStatus.OPEN)
-                .map(MedicalAppointmentEntity::toDomain);
+    public List<MedicalAppointment> findByPatientIdAndStatus(UUID patientId, AppointmentStatus status) {
+        return jpa.findByPatientIdAndStatus(patientId, status).stream()
+                .map(MedicalAppointmentEntity::toDomain).toList();
     }
 }

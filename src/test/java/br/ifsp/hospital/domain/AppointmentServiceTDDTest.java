@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -129,21 +130,23 @@ class AppointmentServiceTDDTest {
     void shouldBlockCreationIfPatientAlreadyHasOpenAppointment() {
         UUID validPatientId = UUID.randomUUID();
         UUID validDoctorId = UUID.randomUUID();
-        LocalDateTime scheduledAt = LocalDateTime.now().plusDays(1);
+        LocalDateTime scheduledAt = LocalDateTime.of(2030, 5, 1, 10, 0);
 
         Patient patient = Patient.of("Ana", "123", InsuranceType.BASIC);
         Doctor doctor = Doctor.of("Dr. Silva", "Cardiologia", "CRM-123");
 
         when(patientRepository.findById(validPatientId)).thenReturn(Optional.of(patient));
-        when(doctorRepository.findById(validDoctorId)).thenReturn(Optional.of(doctor));
 
-        MedicalAppointment openAppointment = MedicalAppointment.of(patient, doctor, LocalDateTime.now());
+        MedicalAppointment openAppointment = MedicalAppointment.of(patient, doctor,
+                LocalDateTime.of(2030, 4, 1, 10, 0));
+
         when(appointmentRepository.findByPatientIdAndStatus(validPatientId, AppointmentStatus.OPEN))
                 .thenReturn(List.of(openAppointment));
 
         assertThatThrownBy(() -> sut.create(validPatientId, validDoctorId, scheduledAt))
                 .isInstanceOf(IllegalStateException.class);
     }
+
 
     @Test
     @DisplayName("#35 – Deve gerar duas faturas distintas (Paciente e Convênio) se houver seguro")
@@ -174,6 +177,17 @@ class AppointmentServiceTDDTest {
                 .findFirst()
                 .orElseThrow();
         assertThat(insuranceInvoice.amount().getAmount()).isEqualByComparingTo("60.00");
+    }
+
+    @Test
+    @DisplayName("#65 / #66 – Deve impedir criação se a data do atendimento estiver no passado")
+    void shouldBlockCreationIfDateIsInThePast() {
+        UUID validPatientId = UUID.randomUUID();
+        UUID validDoctorId = UUID.randomUUID();
+        LocalDateTime pastDate = LocalDateTime.of(2020, 1, 1, 10, 0);
+
+        assertThatThrownBy(() -> sut.create(validPatientId, validDoctorId, pastDate))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

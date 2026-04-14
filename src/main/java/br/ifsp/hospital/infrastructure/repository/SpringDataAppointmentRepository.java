@@ -19,8 +19,7 @@ public interface SpringDataAppointmentRepository extends JpaRepository<MedicalAp
 
     List<MedicalAppointmentEntity> findByDoctorIdAndScheduledAt(UUID doctorId, LocalDateTime scheduledAt);
 
+
     @Query("SELECT a FROM MedicalAppointmentEntity a WHERE a.patient.id = :patientId AND a.status = :status")
-    Optional<MedicalAppointmentEntity> findByPatientIdAndStatus(
-            @Param("patientId") UUID patientId,
-            @Param("status") AppointmentStatus status);
+    List<MedicalAppointmentEntity> findByPatientIdAndStatus(UUID patientId, AppointmentStatus status);
 }
