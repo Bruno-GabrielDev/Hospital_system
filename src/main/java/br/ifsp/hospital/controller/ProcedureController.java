@@ -1,6 +1,7 @@
 package br.ifsp.hospital.controller;
 
 import br.ifsp.hospital.controller.dto.HospitalDTOs.*;
+import br.ifsp.hospital.domain.model.Money; // Adicione este import
 import br.ifsp.hospital.domain.service.ProcedureAppService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,7 +26,8 @@ public class ProcedureController {
     @Operation(summary = "Cadastrar procedimento")
     @PostMapping
     public ResponseEntity<ProcedureResponse> create(@RequestBody ProcedureRequest request) {
-        var proc = procedureAppService.create(request.name(), request.cost());
+        var proc = procedureAppService.create(request.name(), new Money(request.cost()));
+
         return ResponseEntity.status(HttpStatus.CREATED).body(ProcedureResponse.from(proc));
     }
 
