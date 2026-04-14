@@ -102,4 +102,8 @@ public class AppointmentService {
     public List<MedicalAppointment> findAll()                     { return null; }
     public List<MedicalAppointment> findByPatient(UUID patientId) { return null; }
     public List<MedicalAppointment> findByDoctor(UUID doctorId)   { return null; }
+
+    public List<Invoice> generateInvoices(UUID appointmentId) {
+        return null;
+    }
 }

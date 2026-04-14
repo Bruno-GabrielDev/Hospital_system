@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -121,6 +122,38 @@ class AppointmentServiceTDDTest {
         assertThat(bill.patientAmount().getAmount()).isEqualByComparingTo(expectedPatient);
         assertThat(bill.insuranceAmount().getAmount()).isEqualByComparingTo(expectedInsurance);
         assertThat(bill.insuranceType()).isEqualTo(type);
+    }
+
+    @Test
+    @DisplayName("#35 – Deve gerar duas faturas distintas (Paciente e Convênio) se houver seguro")
+    void shouldGenerateTwoDistinctInvoicesIfInsuranceExists() {
+        // Arrange
+        Patient patientBasic = Patient.of("Carlos", "222", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. Ana", "Ortopedia", "CRM-22");
+        MedicalAppointment appointment = MedicalAppointment.of(patientBasic, doctor,
+                LocalDateTime.of(2026, 5, 1, 10, 0));
+
+        Procedure proc = Procedure.of("Consulta", new Money(new BigDecimal("200.00")));
+        appointment.addProcedure(AppointmentProcedure.of(proc, 1));
+        proc.complete();
+        appointment.close();
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
+
+        List<Invoice> invoices = sut.generateInvoices(appointmentId);
+        assertThat(invoices).hasSize(2);
+
+        Invoice patientInvoice = invoices.stream()
+                .filter(i -> i.type() == InvoiceType.PATIENT)
+                .findFirst()
+                .orElseThrow();
+        assertThat(patientInvoice.amount().getAmount()).isEqualByComparingTo("140.00");
+
+        Invoice insuranceInvoice = invoices.stream()
+                .filter(i -> i.type() == InvoiceType.INSURANCE)
+                .findFirst()
+                .orElseThrow();
+        assertThat(insuranceInvoice.amount().getAmount()).isEqualByComparingTo("60.00");
     }
 
     @Test
