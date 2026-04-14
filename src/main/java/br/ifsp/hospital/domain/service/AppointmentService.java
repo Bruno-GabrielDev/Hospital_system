@@ -36,6 +36,10 @@ public class AppointmentService {
     }
 
     public MedicalAppointment create(UUID patientId, UUID doctorId, LocalDateTime scheduledAt) {
+        if (scheduledAt.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("A data do atendimento não pode estar no passado.");
+        }
+
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado: " + patientId));
 
