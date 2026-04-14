@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,12 +96,40 @@ public class AppointmentService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Atendimento não encontrado: " + appointmentId));
 
-        InsuranceType insuranceType  = appointment.getPatient().getInsuranceType();
-        Money grossTotal             = appointment.calculateGrossTotal();
-        Money patientAmount          = insuranceCoverageService.applyCoverage(grossTotal, insuranceType);
-        Money insuranceAmount        = insuranceCoverageService.getCoveredAmount(grossTotal, insuranceType);
+        Patient patient = appointment.getPatient();
+        InsuranceType insuranceType = patient.getInsuranceType();
+        Money grossTotal = appointment.calculateGrossTotal();
 
-        return new BillDetail(appointmentId, grossTotal, patientAmount, insuranceAmount, insuranceType);
+        BigDecimal patientTotal = BigDecimal.ZERO;
+        BigDecimal insuranceTotal = BigDecimal.ZERO;
+
+        for (AppointmentProcedure ap : appointment.getProcedures()) {
+            BigDecimal itemAmount = ap.getProcedure().getCost().getAmount()
+                    .multiply(BigDecimal.valueOf(ap.getQuantity()));
+            Money itemMoney = new Money(itemAmount);
+
+            LocalDate enrollmentDate = patient.getPlanEnrollmentDate();
+            LocalDate appointmentDate = appointment.getScheduledAt().toLocalDate();
+
+            boolean isUnderGracePeriod = appointmentDate.isBefore(
+                    enrollmentDate.plusDays(ap.getProcedure().getGracePeriodDays())
+            );
+
+            if (isUnderGracePeriod) {
+                patientTotal = patientTotal.add(itemAmount);
+            } else {
+                patientTotal = patientTotal.add(insuranceCoverageService.applyCoverage(itemMoney, insuranceType).getAmount());
+                insuranceTotal = insuranceTotal.add(insuranceCoverageService.getCoveredAmount(itemMoney, insuranceType).getAmount());
+            }
+        }
+
+        return new BillDetail(
+                appointmentId,
+                grossTotal,
+                new Money(patientTotal),
+                new Money(insuranceTotal),
+                insuranceType
+        );
     }
 
     public MedicalAppointment reschedule(UUID appointmentId, LocalDateTime newScheduledAt) {
