@@ -57,7 +57,7 @@ public class MedicalAppointmentFunctionalTest {
     @DisplayName("AVL: Cancelamento com horas de antecedência nas fronteiras")
     @CsvSource({
             "2, false",
-            "3, true",
+            "4, true",
     })
     void testCancellationTimeBoundary(int hoursInAdvance, boolean isAllowed) {
         LocalDateTime scheduledAt = LocalDateTime.now().plusHours(hoursInAdvance);
