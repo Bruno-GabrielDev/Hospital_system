@@ -88,7 +88,11 @@ public class AppointmentService {
     }
 
     public MedicalAppointment markAsBilled(UUID appointmentId) {
-        return null;
+        MedicalAppointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Atendimento não encontrado: " + appointmentId));
+        appointment.markAsBilled();
+        return appointmentRepository.save(appointment);
     }
 
     public BillDetail calculateBill(UUID appointmentId) {
@@ -151,12 +155,21 @@ public class AppointmentService {
     }
 
     public MedicalAppointment findById(UUID id) {
-        return null;
+        return appointmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Atendimento não encontrado: " + id));
     }
 
-    public List<MedicalAppointment> findAll()                     { return null; }
-    public List<MedicalAppointment> findByPatient(UUID patientId) { return null; }
-    public List<MedicalAppointment> findByDoctor(UUID doctorId)   { return null; }
+    public List<MedicalAppointment> findAll() {
+        return appointmentRepository.findAll();
+    }
+
+    public List<MedicalAppointment> findByPatient(UUID patientId) {
+        return appointmentRepository.findByPatientId(patientId);
+    }
+
+    public List<MedicalAppointment> findByDoctor(UUID doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId);
+    }
 
     public List<Invoice> generateInvoices(UUID appointmentId) {
         BillDetail bill = this.calculateBill(appointmentId);
