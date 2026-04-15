@@ -12,6 +12,11 @@ public class InsuranceCoverageService {
 
     public Money applyCoverage(Money grossAmount, InsuranceType type) {
         BigDecimal amount = grossAmount.getAmount();
+
+        if (type == null) {
+            return new Money(amount.setScale(2, RoundingMode.HALF_UP));
+        }
+
         BigDecimal multiplier = switch (type) {
             case PREMIUM -> new BigDecimal("0.30");
             case BASIC -> new BigDecimal("0.70");
@@ -23,6 +28,11 @@ public class InsuranceCoverageService {
     }
 
     public Money getCoveredAmount(Money grossAmount, InsuranceType type) {
+
+        if (type == null) {
+            return new Money(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+        }
+
         Money patientAmount = applyCoverage(grossAmount, type);
         BigDecimal covered = grossAmount.getAmount().subtract(patientAmount.getAmount());
 
