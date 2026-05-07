@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 @UnitTest
 @Structural
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Patient Service - Structural")
 class PatientAppServiceStructuralTest {
 
     @Mock PatientRepository repo;
