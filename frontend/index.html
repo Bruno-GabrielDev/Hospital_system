@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital System - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>🏥 Hospital System</h1>
+
+    <div id="alert" class="alert"></div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('login')">Login</button>
+        <button class="tab" onclick="switchTab('register')">Registrar</button>
+    </div>
+
+    <!-- Login -->
+    <div id="login" class="tab-content active">
+        <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required>
+        </div>
+        <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" required>
+        </div>
+        <button onclick="handleLogin()">Entrar</button>
+    </div>
+
+    <!-- Register -->
+    <div id="register" class="tab-content">
+        <div class="form-group">
+            <label for="reg-name">Nome</label>
+            <input type="text" id="reg-name" required>
+        </div>
+        <div class="form-group">
+            <label for="reg-lastname">Sobrenome</label>
+            <input type="text" id="reg-lastname" required>
+        </div>
+        <div class="form-group">
+            <label for="reg-email">Email</label>
+            <input type="email" id="reg-email" required>
+        </div>
+        <div class="form-group">
+            <label for="reg-password">Senha</label>
+            <input type="password" id="reg-password" required>
+        </div>
+        <button onclick="handleRegister()">Registrar</button>
+    </div>
+</div>
+
+<script src="api.js"></script>
+<script>
+    // Se já está logado, vai pra dashboard
+    if (getToken()) {
+        window.location.href = 'dashboard.html';
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById(tab).classList.add('active');
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        if (!email || !password) {
+            showAlert('error', 'Preencha email e senha.');
+            return;
+        }
+
+        try {
+            const result = await authenticate(email, password);
+            setToken(result.token);
+            showAlert('success', 'Login realizado!');
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+        } catch (err) {
+            showAlert('error', 'Email ou senha inválidos.');
+        }
+    }
+
+    async function handleRegister() {
+        const name = document.getElementById('reg-name').value;
+        const lastname = document.getElementById('reg-lastname').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+
+        if (!name || !lastname || !email || !password) {
+            showAlert('error', 'Preencha todos os campos.');
+            return;
+        }
+
+        try {
+            await register(name, lastname, email, password);
+            showAlert('success', 'Cadastro realizado! Faça login agora.');
+            document.querySelector('.tab').click();
+        } catch (err) {
+            showAlert('error', err.message || 'Erro ao registrar.');
+        }
+    }
+</script>
+</body>
+</html>
