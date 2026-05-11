@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.math.RoundingMode;
 
@@ -191,6 +192,15 @@ public class MedicalAppointment {
         return this.refunded;
     }
 
-    @Override public boolean equals(Object o) { return false; }
-    @Override public int hashCode()            { return 0; }
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        MedicalAppointment that = (MedicalAppointment) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
