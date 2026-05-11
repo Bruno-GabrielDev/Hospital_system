@@ -1,6 +1,7 @@
 package br.ifsp.hospital.domain.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public final class Money {
 
@@ -28,26 +29,19 @@ public final class Money {
         return new Money(amount.multiply(BigDecimal.valueOf(quantity)));
     }
 
-    public Money applyDiscount(BigDecimal factor) {
-        return new Money(this.amount.multiply(factor));
-    }
-
     public Money subtract(Money other) {
         return new Money(this.amount.subtract(other.getAmount()));
     }
 
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        Money money = (Money) o;
+        return Objects.equals(amount, money.amount);
     }
 
     @Override
     public int hashCode() {
-        return 0;
-    }
-
-    @Override
-    public String toString() {
-        return "";
+        return Objects.hashCode(amount);
     }
 }
