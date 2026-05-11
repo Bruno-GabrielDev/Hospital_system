@@ -28,6 +28,7 @@ public class MedicalAppointment {
     private boolean receiptIssued;
 
     private MedicalAppointment(Patient patient, Doctor doctor, LocalDateTime scheduledAt) {
+        this.id = UUID.randomUUID();
         this.patient = patient;
         this.doctor = doctor;
         this.scheduledAt = scheduledAt;
