@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.*;
 @UnitTest
 @Functional
 @DisplayName("Functional – Money (Value Object)")
-
 class MoneyFunctionalTest {
 
     @Test
@@ -67,7 +66,6 @@ class MoneyFunctionalTest {
         Money b = new Money(new BigDecimal("60.00"));
         assertThat(a.subtract(b).getAmount()).isEqualByComparingTo("140.00");
     }
-
 
 
 }

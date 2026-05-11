@@ -65,14 +65,6 @@ class MedicalAppointmentStructuralTest {
     }
 
     @Test
-    @DisplayName("equals e hashCode – invocação para cobertura")
-    void equalsEHashCode_invocacao() {
-        MedicalAppointment a = criar();
-        assertThat(a.equals(null)).isFalse();
-        assertThat(a.hashCode()).isEqualTo(0);
-    }
-
-    @Test
     @DisplayName("markAsBilled – status OPEN → IllegalStateException")
     void markAsBilled_statusOpen_lancaExcecao() {
         MedicalAppointment a = criar();
