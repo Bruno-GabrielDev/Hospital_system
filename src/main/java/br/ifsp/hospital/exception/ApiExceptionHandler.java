@@ -1,8 +1,10 @@
 package br.ifsp.hospital.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -46,5 +48,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ApiException> handleNullPointer(NullPointerException e) {
         return build(HttpStatus.BAD_REQUEST, e);
+    }
+
+    @ExceptionHandler({
+            org.springframework.dao.DataIntegrityViolationException.class,
+            org.springframework.orm.jpa.JpaSystemException.class
+    })
+    public ResponseEntity<ApiException> handleDataIntegrity(Exception e) {
+        return build(HttpStatus.CONFLICT, new Exception("Este registro já está cadastrado no sistema."));
     }
 }

@@ -59,9 +59,12 @@ class EqualsHashCodeStructuralTest {
         Doctor dummyDoctor = Doctor.restore(UUID.randomUUID(), "Dr. House", "Clínico", "CRM111");
         LocalDateTime now = LocalDateTime.now();
 
-        MedicalAppointment medAppBase = MedicalAppointment.restore(idMedApp, dummyPatient, dummyDoctor, now, now, AppointmentStatus.OPEN, 0, new ArrayList<>());
-        MedicalAppointment medAppMatching = MedicalAppointment.restore(idMedApp, dummyPatient, dummyDoctor, now, now, AppointmentStatus.OPEN, 0, new ArrayList<>());
-        MedicalAppointment medAppDifferent = MedicalAppointment.restore(UUID.randomUUID(), dummyPatient, dummyDoctor, now, now, AppointmentStatus.OPEN, 0, new ArrayList<>());
+        MedicalAppointment medAppBase = MedicalAppointment
+                .restore(idMedApp, dummyPatient, dummyDoctor, now, now, AppointmentStatus.OPEN, 0, new ArrayList<>());
+        MedicalAppointment medAppMatching = MedicalAppointment
+                .restore(idMedApp, dummyPatient, dummyDoctor, now, now, AppointmentStatus.OPEN, 0, new ArrayList<>());
+        MedicalAppointment medAppDifferent = MedicalAppointment
+                .restore(UUID.randomUUID(), dummyPatient, dummyDoctor, now, now, AppointmentStatus.OPEN, 0, new ArrayList<>());
 
         return Stream.of(
                 new EqualsHashCodeScenario(

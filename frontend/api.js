@@ -16,14 +16,13 @@ function removeToken() {
     window.location.href = 'index.html';
 }
 
-// Chamada genérica à API
 async function apiCall(endpoint, method = 'GET', body = null, requireAuth = true) {
     const headers = { 'Content-Type': 'application/json' };
 
     if (requireAuth) {
         const token = getToken();
         if (!token) {
-            removeToken();
+            window.location.href = 'index.html';
             throw new Error('Não autenticado');
         }
         headers['Authorization'] = `Bearer ${token}`;
@@ -35,8 +34,11 @@ async function apiCall(endpoint, method = 'GET', body = null, requireAuth = true
     const response = await fetch(`${API_URL}${endpoint}`, config);
 
     if (response.status === 401) {
-        removeToken();
-        throw new Error('Sessão expirada');
+        if (endpoint !== '/authenticate') {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html'; 
+        }
+        throw new Error('Sessão expirada ou não autorizada');
     }
 
     const text = await response.text();
