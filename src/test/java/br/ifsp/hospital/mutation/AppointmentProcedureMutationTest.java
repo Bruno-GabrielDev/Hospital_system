@@ -25,4 +25,15 @@ public class AppointmentProcedureMutationTest {
 
         assertThat(appointmentProcedure.isRefunded()).isFalse();
     }
+
+    @Test
+    @DisplayName("Deve gerar hashCodes diferentes para instâncias distintas (IDs diferentes)")
+    void hashCodeDifferentInstancesShouldReturnDifferentHashCodes() {
+        Procedure dummyProcedure = Procedure.of("Consulta", new Money(new BigDecimal("100.00")));
+
+        AppointmentProcedure ap1 = AppointmentProcedure.of(dummyProcedure, 1);
+        AppointmentProcedure ap2 = AppointmentProcedure.of(dummyProcedure, 1);
+
+        assertThat(ap1.hashCode()).isNotEqualTo(ap2.hashCode());
+    }
 }
