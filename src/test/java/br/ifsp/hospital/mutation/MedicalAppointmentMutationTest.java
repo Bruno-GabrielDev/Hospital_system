@@ -29,4 +29,16 @@ public class MedicalAppointmentMutationTest {
 
         assertThat(appointment.isReceiptIssued()).isFalse();
     }
+
+    @Test
+    @DisplayName("Deve retornar false para isRefunded em um agendamento recém-criado")
+    void isRefundedNewAppointmentShouldReturnFalse() {
+        Patient patient = Patient.of("John", "123", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. House", "Cardio", "CRM123");
+        LocalDateTime scheduledAt = LocalDateTime.now().plusDays(1);
+
+        MedicalAppointment appointment = MedicalAppointment.of(patient, doctor, scheduledAt);
+
+        assertThat(appointment.isRefunded()).isFalse();
+    }
 }
