@@ -41,4 +41,17 @@ public class MedicalAppointmentMutationTest {
 
         assertThat(appointment.isRefunded()).isFalse();
     }
+
+    @Test
+    @DisplayName("Deve gerar hashCodes diferentes para instâncias distintas (IDs diferentes)")
+    void hashCodeDifferentAppointmentsShouldReturnDifferentHashCodes() {
+        Patient patient = Patient.of("John", "123", InsuranceType.BASIC);
+        Doctor doctor = Doctor.of("Dr. House", "Cardio", "CRM123");
+        LocalDateTime scheduledAt = LocalDateTime.now().plusDays(1);
+
+        MedicalAppointment appointment1 = MedicalAppointment.of(patient, doctor, scheduledAt);
+        MedicalAppointment appointment2 = MedicalAppointment.of(patient, doctor, scheduledAt);
+
+        assertThat(appointment1.hashCode()).isNotEqualTo(appointment2.hashCode());
+    }
 }
