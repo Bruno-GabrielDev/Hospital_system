@@ -28,4 +28,4 @@ class PatientTDDTest {
         assertThat(restored.getDocument()).isEqualTo("999.999.999-99");
         assertThat(restored.getInsuranceType()).isEqualTo(InsuranceType.PREMIUM);
     }
-}
+    }

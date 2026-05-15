@@ -22,5 +22,25 @@ public class MoneyMutationTest {
         Money money100 = new Money(new BigDecimal("100.00"));
 
         assertThat(money50.hashCode()).isNotEqualTo(money100.hashCode());
+        assertThat(money50.hashCode()).isNotZero();
+    }
+
+    @Test
+    @DisplayName("Deve seguir o contrato do equals e hashCode para valores iguais")
+    void shouldFollowEqualsAndHashCodeContractForSameValues() {
+        Money money1 = new Money(new BigDecimal("100.00"));
+        Money money2 = new Money(new BigDecimal("100.00"));
+
+        assertThat(money1).isEqualTo(money2);
+        assertThat(money1.hashCode()).isEqualTo(money2.hashCode());
+    }
+
+    @Test
+    @DisplayName("Não deve ser igual a null ou classes diferentes")
+    void shouldNotBeEqualToNullOrDifferentClasses() {
+        Money money = new Money(new BigDecimal("100.00"));
+
+        assertThat(money).isNotEqualTo(null);
+        assertThat(money).isNotEqualTo("100.00");
     }
 }

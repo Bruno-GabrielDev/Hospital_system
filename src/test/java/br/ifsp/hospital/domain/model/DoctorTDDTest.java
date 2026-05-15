@@ -26,4 +26,4 @@ class DoctorTDDTest {
         assertThat(restored.getSpecialty()).isEqualTo("Cardiologia");
         assertThat(restored.getLicense()).isEqualTo("CRM-SP 99999");
     }
-}
+    }

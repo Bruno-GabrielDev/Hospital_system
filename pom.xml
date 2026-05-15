@@ -169,6 +169,9 @@
                     <targetTests>
                         <param>br.ifsp.hospital.*</param>
                     </targetTests>
+                    <mutators>
+                        <mutator>ALL</mutator>
+                    </mutators>
                     <outputFormats>
                         <outputFormat>HTML</outputFormat>
                     </outputFormats>

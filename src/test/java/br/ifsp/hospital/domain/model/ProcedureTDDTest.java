@@ -27,4 +27,4 @@ class ProcedureTDDTest {
         assertThat(restored.getName()).isEqualTo("Consulta");
         assertThat(restored.getCost().getAmount()).isEqualByComparingTo("150.00");
     }
-}
+    }

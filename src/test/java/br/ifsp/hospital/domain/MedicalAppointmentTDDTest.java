@@ -166,6 +166,23 @@ public class MedicalAppointmentTDDTest {
     }
 
     @Test
+    @DisplayName("#6 – restore deve restaurar lista de procedimentos corretamente (#100)")
+    void shouldRestoreProceduresListCorrectly() {
+        UUID id = UUID.randomUUID();
+        Procedure p = Procedure.of("RX", new Money(new BigDecimal("100.00")));
+        AppointmentProcedure ap = AppointmentProcedure.of(p, 1);
+        List<AppointmentProcedure> procedures = List.of(ap);
+
+        MedicalAppointment restored = MedicalAppointment.restore(
+                id, dummyPatient, dummyDoctor, LocalDateTime.now(), LocalDateTime.now(),
+                AppointmentStatus.OPEN, 0, procedures
+        );
+
+        assertThat(restored.getProcedures()).hasSize(1);
+        assertThat(restored.getProcedures().get(0)).isEqualTo(ap);
+    }
+
+    @Test
     @DisplayName("#26/22 – calculateGrossTotal deve somar o custo de todos os procedimentos")
     void calculateGrossTotalMaySumCostsOfAllProcedures() {
         Patient patient = Patient.of("João", "111", InsuranceType.BASIC);
@@ -486,7 +503,7 @@ public class MedicalAppointmentTDDTest {
 
         appointment.markAsBilled();
 
-        // Assert
+        
         assertThat(appointment.getStatus()).isEqualTo(AppointmentStatus.BILLED);
         assertThat(appointment.isReceiptIssued()).isTrue();
     }

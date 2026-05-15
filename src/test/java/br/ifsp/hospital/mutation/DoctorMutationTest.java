@@ -21,4 +21,15 @@ public class DoctorMutationTest {
 
         assertThat(doctor1.hashCode()).isNotEqualTo(doctor2.hashCode());
     }
-}
+
+    @Test
+    @DisplayName("Deve seguir o contrato do hashCode (#97)")
+    void shouldFollowHashCodeContract() {
+        java.util.UUID id = java.util.UUID.randomUUID();
+        Doctor d1 = Doctor.restore(id, "Dr. House", "Cardiologia", "123");
+        Doctor d2 = Doctor.restore(id, "Dr. House", "Cardiologia", "123");
+
+        assertThat(d1.hashCode()).isEqualTo(d2.hashCode());
+        assertThat(d1.hashCode()).isNotZero();
+    }
+    }

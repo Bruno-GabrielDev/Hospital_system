@@ -35,4 +35,4 @@ class AppointmentProcedureTDDTest {
         AppointmentProcedure appointmentProcedure = AppointmentProcedure.of(procedure, 3);
         assertThat(appointmentProcedure.getTotalCost().getAmount()).isEqualByComparingTo("300.00");
     }
-}
+    }
