@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -40,5 +41,18 @@ public class PatientAppServiceMutationTest {
 
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expectedPatient);
+    }
+
+    @Test
+    @DisplayName("Deve lançar EntityNotFoundException ao buscar paciente inexistente por ID")
+    void findByIdPatientNotFoundShouldThrowException() {
+        java.util.UUID patientId = java.util.UUID.randomUUID();
+
+        // Força o repositório a retornar um Optional vazio
+        when(patientRepository.findById(patientId)).thenReturn(java.util.Optional.empty());
+
+        assertThatThrownBy(() -> sut.findById(patientId))
+                .isInstanceOf(jakarta.persistence.EntityNotFoundException.class)
+                .hasMessageContaining("Paciente não encontrado");
     }
 }
