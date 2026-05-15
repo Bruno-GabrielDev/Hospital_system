@@ -63,4 +63,16 @@ public class AppointmentServiceMutationTest {
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Atendimento não encontrado");
     }
+
+    @Test
+    @DisplayName("Deve lançar EntityNotFoundException ao buscar atendimento inexistente por ID")
+    void findByIdAppointmentNotFoundShouldThrowException() {
+        UUID appointmentId = UUID.randomUUID();
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sut.findById(appointmentId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Atendimento não encontrado");
+    }
 }
