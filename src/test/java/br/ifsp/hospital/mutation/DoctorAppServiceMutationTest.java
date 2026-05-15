@@ -5,6 +5,7 @@ import br.ifsp.hospital.annotation.UnitTest;
 import br.ifsp.hospital.domain.model.Doctor;
 import br.ifsp.hospital.domain.repository.DoctorRepository;
 import br.ifsp.hospital.domain.service.DoctorAppService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -39,5 +43,17 @@ public class DoctorAppServiceMutationTest {
 
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expectedDoctor);
+    }
+
+    @Test
+    @DisplayName("Deve lançar EntityNotFoundException ao buscar médico inexistente por ID")
+    void findByIdDoctorNotFoundShouldThrowException() {
+        UUID doctorId = UUID.randomUUID();
+
+        when(doctorRepository.findById(doctorId)).thenReturn(java.util.Optional.empty());
+
+        assertThatThrownBy(() -> sut.findById(doctorId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Médico não encontrado");
     }
 }
