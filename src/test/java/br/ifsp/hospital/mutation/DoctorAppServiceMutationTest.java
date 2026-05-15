@@ -56,4 +56,17 @@ public class DoctorAppServiceMutationTest {
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Médico não encontrado");
     }
+
+    @Test
+    @DisplayName("Deve retornar lista contendo médicos ao invés de lista vazia")
+    void findAllShouldReturnPopulatedList() {
+        Doctor mockDoctor = Doctor.of("Dr. Gregory House", "Diagnóstico", "CRM-12345");
+
+        when(doctorRepository.findAll()).thenReturn(java.util.List.of(mockDoctor));
+
+        var result = sut.findAll();
+
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+    }
 }
