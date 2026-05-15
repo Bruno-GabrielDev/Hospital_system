@@ -48,11 +48,23 @@ public class PatientAppServiceMutationTest {
     void findByIdPatientNotFoundShouldThrowException() {
         java.util.UUID patientId = java.util.UUID.randomUUID();
 
-        // Força o repositório a retornar um Optional vazio
         when(patientRepository.findById(patientId)).thenReturn(java.util.Optional.empty());
 
         assertThatThrownBy(() -> sut.findById(patientId))
                 .isInstanceOf(jakarta.persistence.EntityNotFoundException.class)
                 .hasMessageContaining("Paciente não encontrado");
+    }
+
+    @Test
+    @DisplayName("Deve retornar lista contendo pacientes ao invés de lista vazia")
+    void findAllShouldReturnPopulatedList() {
+        Patient mockPatient = Patient.of("John Doe", "111.222.333-44", InsuranceType.BASIC);
+
+        when(patientRepository.findAll()).thenReturn(java.util.List.of(mockPatient));
+
+        var result = sut.findAll();
+
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
     }
 }
