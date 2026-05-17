@@ -24,6 +24,12 @@ Sistema hospitalar desenvolvido como trabalho da disciplina **Verificação, Val
 
 ## 📋 Pré-requisitos
 
+Existem duas formas de rodar o projeto:
+
+**Opção 1 — Com Docker (recomendado, mais simples):**
+- Docker
+
+**Opção 2 — Manualmente:**
 - Java 21+
 - Maven 3.8+
 - Python 3 (para servir o frontend)
@@ -31,14 +37,40 @@ Sistema hospitalar desenvolvido como trabalho da disciplina **Verificação, Val
 
 ## 🚀 Como Executar
 
-### 1. Clonar o repositório
+### 🐳 Opção 1: Com Docker (recomendado)
+
+Na raiz do projeto (onde está o `Dockerfile`):
+
+```bash
+# Build da imagem (só precisa fazer uma vez)
+docker build -t hospital-system .
+
+# Sobe o container (backend + frontend juntos)
+docker run -p 8080:8080 -p 5500:5500 hospital-system
+```
+
+Acessa:
+- **Frontend:** http://localhost:5500
+- **Swagger:** http://localhost:8080/api/v1/api-docs
+
+Para parar o container:
+```bash
+docker ps           # vê o ID do container
+docker stop <ID>    # para
+```
+
+---
+
+### 🔧 Opção 2: Manualmente
+
+#### 1. Clonar o repositório
 
 ```bash
 git clone https://github.com/Bruno-GabrielDev/Hospital_system.git
 cd Hospital_system
 ```
 
-### 2. Subir o Backend
+#### 2. Subir o Backend
 
 Na raiz do projeto (onde está o `pom.xml`):
 
@@ -50,7 +82,7 @@ O backend sobe em **http://localhost:8080**.
 
 Swagger disponível em: **http://localhost:8080/api/v1/api-docs**
 
-### 3. Subir o Frontend
+#### 3. Subir o Frontend
 
 Em outro terminal, na pasta `frontend`:
 
@@ -124,6 +156,7 @@ E acessa http://localhost:8081
 
 ```
 hospital-tdd-base/
+├── Dockerfile              ← Imagem Docker (backend + frontend)
 ├── src/main/java/br/ifsp/hospital/
 │   ├── domain/
 │   │   ├── model/          ← Entidades e Value Objects (puro, sem JPA)
@@ -147,6 +180,7 @@ hospital-tdd-base/
 │   ├── api.js              ← Integração com a API
 │   ├── style.css           ← Estilos
 │   └── README.md           ← README do frontend
+├── Mutation.md             ← Relatório de mutantes equivalentes
 └── pom.xml
 ```
 
@@ -191,7 +225,7 @@ Todos os endpoints (exceto `/register` e `/authenticate`) requerem autenticaçã
 - **TDD:** todos os cenários do backlog cobertos
 - **Funcional:** Partição de Equivalência (PE) e Análise de Valor Limite (AVL)
 - **Estrutural:** 100% Branch coverage no domínio
-- **Mutação:** análise via Pitest
+- **Mutação:** análise via Pitest (ver `Mutation.md` para mutantes equivalentes)
 
 ## 👥 Equipe
 
